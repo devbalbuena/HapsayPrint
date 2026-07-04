@@ -1,0 +1,49 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+enum JobStatus {
+  PENDING
+  IN_PROGRESS
+  READY_FOR_PICKUP
+  DELIVERED
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  name      String
+  contact   String
+  email     String?
+  createdAt DateTime @default(now())
+
+  jobs Job[]
+}
+
+model Job {
+  id          String    @id @default(cuid())
+  description String
+  status      JobStatus @default(PENDING)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  files FileUpload[]
+}
+
+model FileUpload {
+  id           String   @id @default(cuid())
+  url          String
+  originalName String
+  fileType     String
+  uploadedAt   DateTime @default(now())
+
+  jobId String
+  job   Job    @relation(fields: [jobId], references: [id])
+}
