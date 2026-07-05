@@ -92,7 +92,7 @@ export function SubmitForm() {
         
         if (res && res.length > 0) {
           fileData = {
-            url: res[0].url,
+            url: res[0].ufsUrl || res[0].url,
             originalName: res[0].name,
             fileType: res[0].type,
           };
