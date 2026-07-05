@@ -14,6 +14,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { SubmitSuccess } from "./SubmitSuccess";
 import { PrinterIcon, UploadIcon } from "lucide-react";
+import { uploadFiles } from "@/lib/uploadthing";
+import { submitPrintJob } from "@/app/actions";
+import { toast } from "sonner";
 
 interface FormData {
   name: string;
@@ -76,18 +79,49 @@ export function SubmitForm() {
       return;
     }
     setLoading(true);
-    // Phase 3: log only, no DB or storage yet
-    console.log("📋 HapsayPrint submission:", {
-      name: form.name,
-      contact: form.contact,
-      email: form.email || null,
-      description: form.description,
-      file: form.file ? { name: form.file.name, type: form.file.type, size: form.file.size } : null,
-    });
-    // Simulate brief network delay for UX realism
-    await new Promise((r) => setTimeout(r, 800));
-    setLoading(false);
-    setSubmitted(true);
+
+    try {
+      let fileData = undefined;
+      
+      // 1. Upload file if selected
+      if (form.file) {
+        toast.loading("Uploading file...", { id: "submit-toast" });
+        const res = await uploadFiles("printJobFile", {
+          files: [form.file],
+        });
+        
+        if (res && res.length > 0) {
+          fileData = {
+            url: res[0].url,
+            originalName: res[0].name,
+            fileType: res[0].type,
+          };
+        }
+      } else {
+        toast.loading("Submitting your order...", { id: "submit-toast" });
+      }
+
+      // 2. Submit to Server Action
+      const result = await submitPrintJob({
+        name: form.name,
+        contact: form.contact,
+        email: form.email || null,
+        description: form.description,
+        file: fileData,
+      });
+
+      if (result.success) {
+        toast.success("Order submitted successfully!", { id: "submit-toast" });
+        setSubmitted(true);
+      } else {
+        toast.error(result.error || "Something went wrong.", { id: "submit-toast" });
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to upload file. Please try again or check the file size.", { id: "submit-toast" });
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (submitted) {
