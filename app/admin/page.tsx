@@ -1,5 +1,6 @@
 import { prisma } from "@/src/db";
 import { AdminDashboardClient } from "@/components/AdminDashboardClient";
+import { SignOutButton } from "@/components/SignOutButton";
 import { ClipboardListIcon, PrinterIcon } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -39,12 +40,15 @@ export default async function AdminPage() {
             <h1 className="font-bold text-lg leading-none">HapsayPrint</h1>
             <p className="text-xs text-muted-foreground">Admin Dashboard</p>
           </div>
-          <a
-            href="/"
-            className="ml-auto text-xs text-muted-foreground hover:text-foreground transition-colors"
-          >
-            ← Back to Form
-          </a>
+          <div className="ml-auto flex items-center gap-3">
+            <a
+              href="/"
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              ← Submit Form
+            </a>
+            <SignOutButton />
+          </div>
         </div>
       </header>
 
