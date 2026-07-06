@@ -146,6 +146,15 @@ exports.Prisma.FileUploadScalarFieldEnum = {
   jobId: 'jobId'
 };
 
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  password: 'password',
+  role: 'role',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -170,7 +179,8 @@ exports.JobStatus = exports.$Enums.JobStatus = {
 exports.Prisma.ModelName = {
   Customer: 'Customer',
   Job: 'Job',
-  FileUpload: 'FileUpload'
+  FileUpload: 'FileUpload',
+  User: 'User'
 };
 
 /**
