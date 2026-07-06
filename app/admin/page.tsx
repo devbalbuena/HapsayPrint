@@ -3,6 +3,8 @@ import { AdminDashboardClient } from "@/components/AdminDashboardClient";
 import { SignOutButton } from "@/components/SignOutButton";
 import { ClipboardListIcon, PrinterIcon } from "lucide-react";
 import type { Metadata } from "next";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | HapsayPrint",
@@ -13,6 +15,11 @@ export const metadata: Metadata = {
 export const revalidate = 30;
 
 export default async function AdminPage() {
+  const session = await auth();
+  if (!session) {
+    redirect("/login?callbackUrl=/admin");
+  }
+
   const jobs = await prisma.job.findMany({
     orderBy: { createdAt: "desc" },
     include: {
