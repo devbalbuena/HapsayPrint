@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { Pool } from '@neondatabase/serverless'
 import { PrismaNeon } from '@prisma/adapter-neon'
 import { PrismaClient } from './generated/prisma'
