@@ -2,6 +2,35 @@
 
 import { prisma } from "@/src/db";
 import { revalidatePath } from "next/cache";
+import { auth } from "@/auth";
+
+const VALID_STATUSES = ["PENDING", "IN_PROGRESS", "READY_FOR_PICKUP", "DELIVERED"] as const;
+type JobStatus = typeof VALID_STATUSES[number];
+
+export async function updateJobStatus(jobId: string, newStatus: string) {
+  // Double-check session server-side — cannot be bypassed by direct calls
+  const session = await auth();
+  if (!session) {
+    return { success: false, error: "Unauthorized. Please log in." };
+  }
+
+  if (!VALID_STATUSES.includes(newStatus as JobStatus)) {
+    return { success: false, error: "Invalid status value." };
+  }
+
+  try {
+    await prisma.job.update({
+      where: { id: jobId },
+      data: { status: newStatus as JobStatus },
+    });
+
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to update job status:", error);
+    return { success: false, error: "Failed to update status. Please try again." };
+  }
+}
 
 export type SubmitPrintJobData = {
   name: string;
