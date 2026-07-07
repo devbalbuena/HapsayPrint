@@ -1,17 +1,17 @@
 import { prisma } from "@/src/db";
 import { AdminDashboardClient } from "@/components/AdminDashboardClient";
 import { SignOutButton } from "@/components/SignOutButton";
-import { ClipboardListIcon, PrinterIcon } from "lucide-react";
+import { PrinterIcon, ClockIcon, Loader2Icon, PackageCheckIcon, CheckCircle2Icon } from "lucide-react";
 import type { Metadata } from "next";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | HapsayPrint",
   description: "View and manage all submitted print jobs.",
 };
 
-// Revalidate every 30 seconds to keep data fresh without full SSR cost
 export const revalidate = 30;
 
 export default async function AdminPage() {
@@ -36,51 +36,72 @@ export default async function AdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-primary/10">
-            <PrinterIcon className="w-5 h-5 text-primary" />
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+      
+      {/* Unified Top Nav */}
+      <header className="bg-zinc-950 text-zinc-50 border-b border-zinc-800 sticky top-0 z-20 shadow-sm">
+        <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3">
+              <div className="p-1.5 rounded-lg bg-zinc-800/80 border border-zinc-700/50">
+                <PrinterIcon className="w-5 h-5 text-zinc-300" />
+              </div>
+              <span className="font-bold text-lg tracking-tight">HapsayPrint</span>
+            </div>
+            
+            <div className="hidden sm:flex items-center gap-2 text-sm font-medium text-zinc-400">
+              <span className="text-zinc-600">/</span>
+              <span className="text-zinc-100 bg-zinc-800 px-2.5 py-1 rounded-md">Dashboard</span>
+            </div>
           </div>
-          <div>
-            <h1 className="font-bold text-lg leading-none">HapsayPrint</h1>
-            <p className="text-xs text-muted-foreground">Admin Dashboard</p>
-          </div>
-          <div className="ml-auto flex items-center gap-3">
-            <a
+
+          <div className="flex items-center gap-6">
+            <Link
               href="/"
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+              className="text-sm font-medium text-zinc-400 hover:text-zinc-50 transition-colors"
             >
-              ← Submit Form
-            </a>
+              Public Form ↗
+            </Link>
+            <div className="h-4 w-px bg-zinc-800 hidden sm:block" />
             <SignOutButton />
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
-        {/* Page Title */}
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <ClipboardListIcon className="w-5 h-5 text-muted-foreground" />
-            <h2 className="text-2xl font-bold">All Jobs</h2>
-          </div>
-          <p className="text-muted-foreground text-sm">
-            {jobs.length} total submission{jobs.length !== 1 ? "s" : ""}
-          </p>
+      {/* Main Content */}
+      <main className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        
+        {/* Analytics Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <StatCard 
+            label="Pending Review" 
+            count={counts.PENDING} 
+            color="amber" 
+            icon={<ClockIcon className="w-5 h-5" />}
+          />
+          <StatCard 
+            label="In Progress" 
+            count={counts.IN_PROGRESS} 
+            color="blue" 
+            icon={<Loader2Icon className="w-5 h-5" />}
+          />
+          <StatCard 
+            label="Ready for Pickup" 
+            count={counts.READY_FOR_PICKUP} 
+            color="emerald" 
+            icon={<PackageCheckIcon className="w-5 h-5" />}
+          />
+          <StatCard 
+            label="Delivered" 
+            count={counts.DELIVERED} 
+            color="zinc" 
+            icon={<CheckCircle2Icon className="w-5 h-5" />}
+          />
         </div>
 
-        {/* Stats Row */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <StatCard label="Pending" count={counts.PENDING} color="amber" />
-          <StatCard label="In Progress" count={counts.IN_PROGRESS} color="blue" />
-          <StatCard label="Ready for Pickup" count={counts.READY_FOR_PICKUP} color="emerald" />
-          <StatCard label="Delivered" count={counts.DELIVERED} color="zinc" />
-        </div>
-
-        {/* Jobs Table */}
+        {/* Data Grid Toolbar & Table */}
         <AdminDashboardClient jobs={jobs} />
+
       </main>
     </div>
   );
@@ -90,22 +111,37 @@ function StatCard({
   label,
   count,
   color,
+  icon
 }: {
   label: string;
   count: number;
   color: "amber" | "blue" | "emerald" | "zinc";
+  icon: React.ReactNode;
 }) {
-  const colorStyles = {
-    amber: "bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-900/20 dark:border-amber-800 dark:text-amber-300",
-    blue: "bg-blue-50 border-blue-200 text-blue-700 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-300",
-    emerald: "bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-300",
-    zinc: "bg-zinc-50 border-zinc-200 text-zinc-600 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400",
+  const styles = {
+    amber: "from-amber-500/10 to-amber-500/5 dark:from-amber-500/20 dark:to-transparent border-amber-500/20 text-amber-700 dark:text-amber-400 icon-amber",
+    blue: "from-blue-500/10 to-blue-500/5 dark:from-blue-500/20 dark:to-transparent border-blue-500/20 text-blue-700 dark:text-blue-400 icon-blue",
+    emerald: "from-emerald-500/10 to-emerald-500/5 dark:from-emerald-500/20 dark:to-transparent border-emerald-500/20 text-emerald-700 dark:text-emerald-400 icon-emerald",
+    zinc: "from-zinc-500/10 to-zinc-500/5 dark:from-zinc-500/20 dark:to-transparent border-zinc-500/20 text-zinc-700 dark:text-zinc-400 icon-zinc",
   };
 
   return (
-    <div className={`rounded-xl border px-4 py-3 ${colorStyles[color]}`}>
-      <p className="text-2xl font-bold">{count}</p>
-      <p className="text-xs font-medium mt-0.5 opacity-80">{label}</p>
+    <div className={`relative overflow-hidden rounded-2xl border bg-white dark:bg-zinc-900/50 shadow-sm transition-all hover:shadow-md group ${styles[color].split(' icon-')[0]}`}>
+      {/* Subtle Glow Background */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${styles[color].split(' icon-')[0]} opacity-50`} />
+      
+      <div className="relative p-6">
+        <div className="flex items-start justify-between">
+          <div>
+            <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 mb-1">{label}</p>
+            <p className="text-4xl font-bold text-zinc-900 dark:text-zinc-50 tracking-tight">{count}</p>
+          </div>
+          
+          <div className={`p-2.5 rounded-xl bg-white dark:bg-zinc-800 border shadow-sm ${styles[color].split('icon-')[1] === 'amber' ? 'text-amber-500 border-amber-100 dark:border-amber-900/50' : styles[color].split('icon-')[1] === 'blue' ? 'text-blue-500 border-blue-100 dark:border-blue-900/50' : styles[color].split('icon-')[1] === 'emerald' ? 'text-emerald-500 border-emerald-100 dark:border-emerald-900/50' : 'text-zinc-500 border-zinc-200 dark:border-zinc-700'}`}>
+            {icon}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
