@@ -1,22 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { SubmitSuccess } from "./SubmitSuccess";
-import { PrinterIcon, UploadIcon } from "lucide-react";
+import { UploadCloudIcon, FileIcon, Loader2Icon, ArrowRightIcon, CheckCircleIcon } from "lucide-react";
 import { uploadFiles } from "@/lib/uploadthing";
 import { submitPrintJob } from "@/app/actions";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface FormData {
   name: string;
@@ -47,10 +41,9 @@ export function SubmitForm() {
 
   function validate(): FormErrors {
     const errs: FormErrors = {};
-    if (!form.name.trim()) errs.name = "Full name is required.";
-    if (!form.contact.trim()) errs.contact = "Contact number is required.";
-    if (!form.description.trim())
-      errs.description = "Job description is required.";
+    if (!form.name.trim()) errs.name = "Full name is required";
+    if (!form.contact.trim()) errs.contact = "Contact number is required";
+    if (!form.description.trim()) errs.description = "Job description is required";
     return errs;
   }
 
@@ -59,7 +52,6 @@ export function SubmitForm() {
   ) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-    // clear error on change
     if (errors[name as keyof FormErrors]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
@@ -83,7 +75,6 @@ export function SubmitForm() {
     try {
       let fileData = undefined;
       
-      // 1. Upload file if selected
       if (form.file) {
         toast.loading("Uploading file...", { id: "submit-toast" });
         const res = await uploadFiles("printJobFile", {
@@ -101,7 +92,6 @@ export function SubmitForm() {
         toast.loading("Submitting your order...", { id: "submit-toast" });
       }
 
-      // 2. Submit to Server Action
       const result = await submitPrintJob({
         name: form.name,
         contact: form.contact,
@@ -126,39 +116,44 @@ export function SubmitForm() {
 
   if (submitted) {
     return (
-      <SubmitSuccess
-        name={form.name}
-        onReset={() => {
-          setForm({ name: "", contact: "", email: "", description: "", file: null });
-          setFileName(null);
-          setErrors({});
-          setSubmitted(false);
-        }}
-      />
+      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xl shadow-zinc-200/40 dark:shadow-none rounded-2xl p-8 lg:p-12 w-full text-center">
+        <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-6">
+          <CheckCircleIcon className="w-8 h-8" />
+        </div>
+        <h2 className="text-2xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50 mb-2">Order Submitted!</h2>
+        <p className="text-zinc-500 mb-8">
+          Thank you, <span className="font-semibold text-zinc-800 dark:text-zinc-300">{form.name}</span>! We've received your job and will contact you at {form.contact} when it's ready.
+        </p>
+        <Button 
+          variant="outline" 
+          onClick={() => {
+            setForm({ name: "", contact: "", email: "", description: "", file: null });
+            setFileName(null);
+            setErrors({});
+            setSubmitted(false);
+          }}
+          className="h-11 px-8 font-medium border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+        >
+          Submit Another Job
+        </Button>
+      </div>
     );
   }
 
   return (
-    <Card className="w-full shadow-lg border-0 bg-card/80 backdrop-blur-sm">
-      <CardHeader className="pb-4">
-        <div className="flex items-center gap-2 mb-1">
-          <div className="p-2 rounded-lg bg-primary/10">
-            <PrinterIcon className="w-5 h-5 text-primary" />
-          </div>
-          <CardTitle className="text-xl">Submit a Print Job</CardTitle>
-        </div>
-        <CardDescription className="text-sm leading-relaxed">
-          Fill in your details and describe what you need printed. We&apos;ll
-          contact you when it&apos;s ready for pickup.
-        </CardDescription>
-      </CardHeader>
+    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-2xl shadow-zinc-200/40 dark:shadow-none rounded-2xl p-8 lg:p-12 w-full">
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50">Submit a Print Job</h2>
+        <p className="text-zinc-500 text-sm mt-2">Fill out the details below and attach your file. We'll handle the rest.</p>
+      </div>
 
-      <CardContent>
-        <form onSubmit={handleSubmit} noValidate className="space-y-5">
-          {/* Full Name */}
-          <div className="space-y-1.5">
-            <Label htmlFor="name">
-              Full Name <span className="text-destructive">*</span>
+      <form onSubmit={handleSubmit} noValidate className="space-y-6">
+        
+        {/* Name & Contact Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <Label htmlFor="name" className="text-zinc-700 dark:text-zinc-300 font-medium">
+              Full Name <span className="text-rose-500">*</span>
             </Label>
             <Input
               id="name"
@@ -166,138 +161,151 @@ export function SubmitForm() {
               placeholder="e.g. Maria Santos"
               value={form.name}
               onChange={handleChange}
-              aria-describedby={errors.name ? "name-error" : undefined}
-              aria-invalid={!!errors.name}
-              className={errors.name ? "border-destructive focus-visible:ring-destructive/30" : ""}
+              className={cn(
+                "h-11 bg-zinc-50/50 dark:bg-zinc-950/50 focus-visible:ring-zinc-950 dark:focus-visible:ring-zinc-300 transition-all border-zinc-200 dark:border-zinc-800",
+                errors.name && "border-rose-500 focus-visible:ring-rose-500 bg-rose-50/50 dark:bg-rose-950/20"
+              )}
             />
-            {errors.name && (
-              <p id="name-error" className="text-xs text-destructive flex items-center gap-1 mt-1">
-                <span>⚠</span> {errors.name}
-              </p>
-            )}
+            {errors.name && <p className="text-xs text-rose-500 font-medium">{errors.name}</p>}
           </div>
 
-          {/* Contact Number */}
-          <div className="space-y-1.5">
-            <Label htmlFor="contact">
-              Contact Number <span className="text-destructive">*</span>
+          <div className="space-y-2">
+            <Label htmlFor="contact" className="text-zinc-700 dark:text-zinc-300 font-medium">
+              Contact Number <span className="text-rose-500">*</span>
             </Label>
             <Input
               id="contact"
               name="contact"
               type="tel"
-              placeholder="e.g. 09171234567"
+              placeholder="e.g. 0917 123 4567"
               value={form.contact}
               onChange={handleChange}
-              aria-describedby={errors.contact ? "contact-error" : undefined}
-              aria-invalid={!!errors.contact}
-              className={errors.contact ? "border-destructive focus-visible:ring-destructive/30" : ""}
+              className={cn(
+                "h-11 bg-zinc-50/50 dark:bg-zinc-950/50 focus-visible:ring-zinc-950 dark:focus-visible:ring-zinc-300 transition-all border-zinc-200 dark:border-zinc-800",
+                errors.contact && "border-rose-500 focus-visible:ring-rose-500 bg-rose-50/50 dark:bg-rose-950/20"
+              )}
             />
-            {errors.contact && (
-              <p id="contact-error" className="text-xs text-destructive flex items-center gap-1 mt-1">
-                <span>⚠</span> {errors.contact}
-              </p>
+            {errors.contact && <p className="text-xs text-rose-500 font-medium">{errors.contact}</p>}
+          </div>
+        </div>
+
+        {/* Email */}
+        <div className="space-y-2">
+          <Label htmlFor="email" className="text-zinc-700 dark:text-zinc-300 font-medium flex justify-between">
+            <span>Email Address</span>
+            <span className="text-zinc-400 font-normal">Optional</span>
+          </Label>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="maria@example.com"
+            value={form.email}
+            onChange={handleChange}
+            className="h-11 bg-zinc-50/50 dark:bg-zinc-950/50 focus-visible:ring-zinc-950 dark:focus-visible:ring-zinc-300 transition-all border-zinc-200 dark:border-zinc-800"
+          />
+        </div>
+
+        {/* Description */}
+        <div className="space-y-2">
+          <Label htmlFor="description" className="text-zinc-700 dark:text-zinc-300 font-medium">
+            Job Instructions <span className="text-rose-500">*</span>
+          </Label>
+          <Textarea
+            id="description"
+            name="description"
+            placeholder="e.g. 50 copies of the attached PDF, A4 size, colored, double-sided."
+            value={form.description}
+            onChange={handleChange}
+            rows={4}
+            className={cn(
+              "resize-none bg-zinc-50/50 dark:bg-zinc-950/50 focus-visible:ring-zinc-950 dark:focus-visible:ring-zinc-300 transition-all border-zinc-200 dark:border-zinc-800 p-3 leading-relaxed",
+              errors.description && "border-rose-500 focus-visible:ring-rose-500 bg-rose-50/50 dark:bg-rose-950/20"
             )}
-          </div>
+          />
+          {errors.description && <p className="text-xs text-rose-500 font-medium">{errors.description}</p>}
+        </div>
 
-          {/* Email (optional) */}
-          <div className="space-y-1.5">
-            <Label htmlFor="email">
-              Email{" "}
-              <span className="text-muted-foreground font-normal text-xs">(optional)</span>
-            </Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="e.g. maria@email.com"
-              value={form.email}
-              onChange={handleChange}
-            />
-          </div>
-
-          {/* Job Description */}
-          <div className="space-y-1.5">
-            <Label htmlFor="description">
-              Job Description / Instructions <span className="text-destructive">*</span>
-            </Label>
-            <Textarea
-              id="description"
-              name="description"
-              placeholder='e.g. "50 copies of resume, short bond paper, 1 side, black &amp; white"'
-              value={form.description}
-              onChange={handleChange}
-              rows={4}
-              aria-describedby={errors.description ? "description-error" : undefined}
-              aria-invalid={!!errors.description}
-              className={`resize-none ${errors.description ? "border-destructive focus-visible:ring-destructive/30" : ""}`}
-            />
-            {errors.description && (
-              <p id="description-error" className="text-xs text-destructive flex items-center gap-1 mt-1">
-                <span>⚠</span> {errors.description}
-              </p>
+        {/* File Upload Zone */}
+        <div className="space-y-2 pt-2">
+          <Label htmlFor="file" className="text-zinc-700 dark:text-zinc-300 font-medium flex justify-between">
+            <span>Attach File</span>
+            <span className="text-zinc-400 font-normal">Max 20MB</span>
+          </Label>
+          <label
+            htmlFor="file"
+            className={cn(
+              "relative flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 overflow-hidden group",
+              fileName 
+                ? "border-emerald-500/50 bg-emerald-50/30 dark:bg-emerald-950/20" 
+                : "border-zinc-300 dark:border-zinc-700 bg-zinc-50/50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-500"
             )}
-          </div>
-
-          {/* File Upload */}
-          <div className="space-y-1.5">
-            <Label htmlFor="file">
-              Attach File{" "}
-              <span className="text-muted-foreground font-normal text-xs">(optional — photo, PDF, or design file)</span>
-            </Label>
-            <label
-              htmlFor="file"
-              className="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed rounded-lg cursor-pointer transition-colors border-border hover:border-primary/50 hover:bg-primary/5 bg-muted/30"
-            >
-              <div className="flex flex-col items-center justify-center gap-1.5">
-                <UploadIcon className="w-6 h-6 text-muted-foreground" />
-                {fileName ? (
-                  <p className="text-sm font-medium text-foreground px-2 text-center truncate max-w-[200px]">
+          >
+            <div className="flex flex-col items-center justify-center gap-3 z-10 p-4 text-center">
+              {fileName ? (
+                <>
+                  <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-1 shadow-sm">
+                    <FileIcon className="w-5 h-5" />
+                  </div>
+                  <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-400 truncate max-w-[250px]">
                     {fileName}
                   </p>
-                ) : (
-                  <>
-                    <p className="text-sm text-muted-foreground">
-                      Tap to upload a file
+                  <p className="text-xs text-emerald-600/70 dark:text-emerald-500/70">Click to change file</p>
+                </>
+              ) : (
+                <>
+                  <div className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform duration-200 shadow-sm">
+                    <UploadCloudIcon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                      Click to upload a document
                     </p>
-                    <p className="text-xs text-muted-foreground">
-                      JPG, PNG, PDF, DOCX up to 20MB
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                      PDF, DOCX, JPG, or PNG
                     </p>
-                  </>
-                )}
-              </div>
-              <input
-                id="file"
-                name="file"
-                type="file"
-                accept="image/*,.pdf,.doc,.docx"
-                className="hidden"
-                onChange={handleFileChange}
-              />
-            </label>
-          </div>
+                  </div>
+                </>
+              )}
+            </div>
+            
+            <input
+              id="file"
+              name="file"
+              type="file"
+              accept="image/*,.pdf,.doc,.docx"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+          </label>
+        </div>
 
-          {/* Submit */}
+        {/* Submit Button */}
+        <div className="pt-4">
           <Button
             type="submit"
-            className="w-full h-11 text-base font-semibold"
+            className="w-full h-12 text-base font-semibold bg-zinc-950 hover:bg-zinc-800 text-white dark:bg-zinc-50 dark:hover:bg-zinc-200 dark:text-zinc-950 transition-all hover:translate-y-[-1px] hover:shadow-lg hover:shadow-zinc-950/20 dark:hover:shadow-zinc-50/10"
             disabled={loading}
           >
             {loading ? (
               <span className="flex items-center gap-2">
-                <span className="animate-spin inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full" />
-                Submitting…
+                <Loader2Icon className="w-5 h-5 animate-spin" />
+                Processing...
               </span>
             ) : (
-              "Submit Print Job"
+              <span className="flex items-center gap-2">
+                Submit Order
+                <ArrowRightIcon className="w-4 h-4" />
+              </span>
             )}
           </Button>
-
-          <p className="text-xs text-center text-muted-foreground pt-1">
-            No account needed. We&apos;ll reach out via your contact number.
+          <p className="text-center text-xs text-zinc-500 mt-4 font-medium flex items-center justify-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            Secure submission. No account required.
           </p>
-        </form>
-      </CardContent>
-    </Card>
+        </div>
+
+      </form>
+    </div>
   );
 }
