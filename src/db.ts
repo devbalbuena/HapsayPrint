@@ -1,4 +1,4 @@
-import 'dotenv/config'
+// No dotenv import needed — Next.js and Vercel load env vars automatically
 import { PrismaClient } from './generated/prisma'
 import { PrismaNeon } from '@prisma/adapter-neon'
 
