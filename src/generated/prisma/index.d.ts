@@ -2310,6 +2310,7 @@ export namespace Prisma {
     status: $Enums.JobStatus | null
     createdAt: Date | null
     updatedAt: Date | null
+    trackingCode: string | null
     customerId: string | null
   }
 
@@ -2319,6 +2320,7 @@ export namespace Prisma {
     status: $Enums.JobStatus | null
     createdAt: Date | null
     updatedAt: Date | null
+    trackingCode: string | null
     customerId: string | null
   }
 
@@ -2328,6 +2330,7 @@ export namespace Prisma {
     status: number
     createdAt: number
     updatedAt: number
+    trackingCode: number
     customerId: number
     _all: number
   }
@@ -2339,6 +2342,7 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
+    trackingCode?: true
     customerId?: true
   }
 
@@ -2348,6 +2352,7 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
+    trackingCode?: true
     customerId?: true
   }
 
@@ -2357,6 +2362,7 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
+    trackingCode?: true
     customerId?: true
     _all?: true
   }
@@ -2439,6 +2445,7 @@ export namespace Prisma {
     status: $Enums.JobStatus
     createdAt: Date
     updatedAt: Date
+    trackingCode: string | null
     customerId: string
     _count: JobCountAggregateOutputType | null
     _min: JobMinAggregateOutputType | null
@@ -2465,6 +2472,7 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    trackingCode?: boolean
     customerId?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     files?: boolean | Job$filesArgs<ExtArgs>
@@ -2477,6 +2485,7 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    trackingCode?: boolean
     customerId?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["job"]>
@@ -2487,6 +2496,7 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    trackingCode?: boolean
     customerId?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["job"]>
@@ -2497,10 +2507,11 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    trackingCode?: boolean
     customerId?: boolean
   }
 
-  export type JobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "description" | "status" | "createdAt" | "updatedAt" | "customerId", ExtArgs["result"]["job"]>
+  export type JobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "description" | "status" | "createdAt" | "updatedAt" | "trackingCode" | "customerId", ExtArgs["result"]["job"]>
   export type JobInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     files?: boolean | Job$filesArgs<ExtArgs>
@@ -2525,6 +2536,7 @@ export namespace Prisma {
       status: $Enums.JobStatus
       createdAt: Date
       updatedAt: Date
+      trackingCode: string | null
       customerId: string
     }, ExtArgs["result"]["job"]>
     composites: {}
@@ -2956,6 +2968,7 @@ export namespace Prisma {
     readonly status: FieldRef<"Job", 'JobStatus'>
     readonly createdAt: FieldRef<"Job", 'DateTime'>
     readonly updatedAt: FieldRef<"Job", 'DateTime'>
+    readonly trackingCode: FieldRef<"Job", 'String'>
     readonly customerId: FieldRef<"Job", 'String'>
   }
     
@@ -5520,6 +5533,7 @@ export namespace Prisma {
     status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
+    trackingCode: 'trackingCode',
     customerId: 'customerId'
   };
 
@@ -5702,6 +5716,7 @@ export namespace Prisma {
     status?: EnumJobStatusFilter<"Job"> | $Enums.JobStatus
     createdAt?: DateTimeFilter<"Job"> | Date | string
     updatedAt?: DateTimeFilter<"Job"> | Date | string
+    trackingCode?: StringNullableFilter<"Job"> | string | null
     customerId?: StringFilter<"Job"> | string
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     files?: FileUploadListRelationFilter
@@ -5713,6 +5728,7 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    trackingCode?: SortOrderInput | SortOrder
     customerId?: SortOrder
     customer?: CustomerOrderByWithRelationInput
     files?: FileUploadOrderByRelationAggregateInput
@@ -5720,6 +5736,7 @@ export namespace Prisma {
 
   export type JobWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    trackingCode?: string
     AND?: JobWhereInput | JobWhereInput[]
     OR?: JobWhereInput[]
     NOT?: JobWhereInput | JobWhereInput[]
@@ -5730,7 +5747,7 @@ export namespace Prisma {
     customerId?: StringFilter<"Job"> | string
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     files?: FileUploadListRelationFilter
-  }, "id">
+  }, "id" | "trackingCode">
 
   export type JobOrderByWithAggregationInput = {
     id?: SortOrder
@@ -5738,6 +5755,7 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    trackingCode?: SortOrderInput | SortOrder
     customerId?: SortOrder
     _count?: JobCountOrderByAggregateInput
     _max?: JobMaxOrderByAggregateInput
@@ -5753,6 +5771,7 @@ export namespace Prisma {
     status?: EnumJobStatusWithAggregatesFilter<"Job"> | $Enums.JobStatus
     createdAt?: DateTimeWithAggregatesFilter<"Job"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Job"> | Date | string
+    trackingCode?: StringNullableWithAggregatesFilter<"Job"> | string | null
     customerId?: StringWithAggregatesFilter<"Job"> | string
   }
 
@@ -5939,6 +5958,7 @@ export namespace Prisma {
     status?: $Enums.JobStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    trackingCode?: string | null
     customer: CustomerCreateNestedOneWithoutJobsInput
     files?: FileUploadCreateNestedManyWithoutJobInput
   }
@@ -5949,6 +5969,7 @@ export namespace Prisma {
     status?: $Enums.JobStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    trackingCode?: string | null
     customerId: string
     files?: FileUploadUncheckedCreateNestedManyWithoutJobInput
   }
@@ -5959,6 +5980,7 @@ export namespace Prisma {
     status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneRequiredWithoutJobsNestedInput
     files?: FileUploadUpdateManyWithoutJobNestedInput
   }
@@ -5969,6 +5991,7 @@ export namespace Prisma {
     status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: StringFieldUpdateOperationsInput | string
     files?: FileUploadUncheckedUpdateManyWithoutJobNestedInput
   }
@@ -5979,6 +6002,7 @@ export namespace Prisma {
     status?: $Enums.JobStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    trackingCode?: string | null
     customerId: string
   }
 
@@ -5988,6 +6012,7 @@ export namespace Prisma {
     status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type JobUncheckedUpdateManyInput = {
@@ -5996,6 +6021,7 @@ export namespace Prisma {
     status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -6282,6 +6308,7 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    trackingCode?: SortOrder
     customerId?: SortOrder
   }
 
@@ -6291,6 +6318,7 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    trackingCode?: SortOrder
     customerId?: SortOrder
   }
 
@@ -6300,6 +6328,7 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    trackingCode?: SortOrder
     customerId?: SortOrder
   }
 
@@ -6632,6 +6661,7 @@ export namespace Prisma {
     status?: $Enums.JobStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    trackingCode?: string | null
     files?: FileUploadCreateNestedManyWithoutJobInput
   }
 
@@ -6641,6 +6671,7 @@ export namespace Prisma {
     status?: $Enums.JobStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    trackingCode?: string | null
     files?: FileUploadUncheckedCreateNestedManyWithoutJobInput
   }
 
@@ -6679,6 +6710,7 @@ export namespace Prisma {
     status?: EnumJobStatusFilter<"Job"> | $Enums.JobStatus
     createdAt?: DateTimeFilter<"Job"> | Date | string
     updatedAt?: DateTimeFilter<"Job"> | Date | string
+    trackingCode?: StringNullableFilter<"Job"> | string | null
     customerId?: StringFilter<"Job"> | string
   }
 
@@ -6790,6 +6822,7 @@ export namespace Prisma {
     status?: $Enums.JobStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    trackingCode?: string | null
     customer: CustomerCreateNestedOneWithoutJobsInput
   }
 
@@ -6799,6 +6832,7 @@ export namespace Prisma {
     status?: $Enums.JobStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    trackingCode?: string | null
     customerId: string
   }
 
@@ -6824,6 +6858,7 @@ export namespace Prisma {
     status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneRequiredWithoutJobsNestedInput
   }
 
@@ -6833,6 +6868,7 @@ export namespace Prisma {
     status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -6842,6 +6878,7 @@ export namespace Prisma {
     status?: $Enums.JobStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    trackingCode?: string | null
   }
 
   export type JobUpdateWithoutCustomerInput = {
@@ -6850,6 +6887,7 @@ export namespace Prisma {
     status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     files?: FileUploadUpdateManyWithoutJobNestedInput
   }
 
@@ -6859,6 +6897,7 @@ export namespace Prisma {
     status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
     files?: FileUploadUncheckedUpdateManyWithoutJobNestedInput
   }
 
@@ -6868,6 +6907,7 @@ export namespace Prisma {
     status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FileUploadCreateManyJobInput = {

@@ -134,6 +134,7 @@ exports.Prisma.JobScalarFieldEnum = {
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  trackingCode: 'trackingCode',
   customerId: 'customerId'
 };
 

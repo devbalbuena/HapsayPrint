@@ -1,4 +1,5 @@
 import { SubmitForm } from "@/components/SubmitForm";
+import { TrackOrderForm } from "@/components/TrackOrderForm";
 import { PrinterIcon, CheckCircle2Icon } from "lucide-react";
 import Link from "next/link";
 
@@ -46,6 +47,11 @@ export default function HomePage() {
               ))}
             </ul>
           </div>
+        </div>
+
+        {/* Track Order */}
+        <div className="relative z-10">
+          <TrackOrderForm />
         </div>
 
         {/* Footer Area */}

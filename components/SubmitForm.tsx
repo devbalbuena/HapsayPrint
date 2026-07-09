@@ -39,6 +39,8 @@ export function SubmitForm() {
   const [loading, setLoading] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
 
+  const [trackingCode, setTrackingCode] = useState<string | null>(null);
+
   function validate(): FormErrors {
     const errs: FormErrors = {};
     if (!form.name.trim()) errs.name = "Full name is required";
@@ -102,6 +104,7 @@ export function SubmitForm() {
 
       if (result.success) {
         toast.success("Order submitted successfully!", { id: "submit-toast" });
+        setTrackingCode(result.trackingCode || null);
         setSubmitted(true);
       } else {
         toast.error(result.error || "Something went wrong.", { id: "submit-toast" });
@@ -116,27 +119,17 @@ export function SubmitForm() {
 
   if (submitted) {
     return (
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xl shadow-zinc-200/40 dark:shadow-none rounded-2xl p-8 lg:p-12 w-full text-center">
-        <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-6">
-          <CheckCircleIcon className="w-8 h-8" />
-        </div>
-        <h2 className="text-2xl font-bold tracking-tight text-zinc-950 dark:text-zinc-50 mb-2">Order Submitted!</h2>
-        <p className="text-zinc-500 mb-8">
-          Thank you, <span className="font-semibold text-zinc-800 dark:text-zinc-300">{form.name}</span>! We've received your job and will contact you at {form.contact} when it's ready.
-        </p>
-        <Button 
-          variant="outline" 
-          onClick={() => {
-            setForm({ name: "", contact: "", email: "", description: "", file: null });
-            setFileName(null);
-            setErrors({});
-            setSubmitted(false);
-          }}
-          className="h-11 px-8 font-medium border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-        >
-          Submit Another Job
-        </Button>
-      </div>
+      <SubmitSuccess 
+        name={form.name} 
+        trackingCode={trackingCode || undefined}
+        onReset={() => {
+          setForm({ name: "", contact: "", email: "", description: "", file: null });
+          setFileName(null);
+          setErrors({});
+          setSubmitted(false);
+          setTrackingCode(null);
+        }} 
+      />
     );
   }
 

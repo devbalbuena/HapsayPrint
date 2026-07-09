@@ -25,11 +25,12 @@ model Customer {
 }
 
 model Job {
-  id          String    @id @default(cuid())
-  description String
-  status      JobStatus @default(PENDING)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id           String    @id @default(cuid())
+  description  String
+  status       JobStatus @default(PENDING)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  trackingCode String?   @unique
 
   customerId String
   customer   Customer @relation(fields: [customerId], references: [id])

@@ -65,11 +65,13 @@ export async function submitPrintJob(data: SubmitPrintJobData) {
       }
 
       // 2. Create the Job
+      const trackingCode = `HP-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
       const newJob = await tx.job.create({
         data: {
           description: data.description,
           status: "PENDING",
           customerId: customer.id,
+          trackingCode: trackingCode,
         },
       });
 
@@ -89,7 +91,7 @@ export async function submitPrintJob(data: SubmitPrintJobData) {
     });
 
     revalidatePath("/");
-    return { success: true, jobId: job.id };
+    return { success: true, jobId: job.id, trackingCode: job.trackingCode };
   } catch (error: any) {
     console.error("Failed to submit print job:", error);
     return { success: false, error: "Failed to save submission. Please try again." };
