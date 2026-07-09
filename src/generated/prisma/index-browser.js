@@ -135,6 +135,11 @@ exports.Prisma.JobScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   trackingCode: 'trackingCode',
+  paperSize: 'paperSize',
+  quantity: 'quantity',
+  printType: 'printType',
+  finishing: 'finishing',
+  estimatedPrice: 'estimatedPrice',
   customerId: 'customerId'
 };
 

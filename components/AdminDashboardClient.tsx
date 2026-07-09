@@ -43,6 +43,11 @@ type Job = {
   status: "PENDING" | "IN_PROGRESS" | "READY_FOR_PICKUP" | "DELIVERED";
   createdAt: Date;
   updatedAt: Date;
+  paperSize: string | null;
+  quantity: number | null;
+  printType: string | null;
+  finishing: string | null;
+  estimatedPrice: number | null;
   customer: Customer;
   files: FileUpload[];
 };
@@ -237,6 +242,7 @@ export function AdminDashboardClient({ jobs }: Props) {
               <TableRow className="hover:bg-transparent border-zinc-200 dark:border-zinc-800">
                 <TableHead className="h-11 font-semibold text-zinc-500 text-xs uppercase tracking-wider pl-6 w-[200px]">Customer</TableHead>
                 <TableHead className="h-11 font-semibold text-zinc-500 text-xs uppercase tracking-wider">Job Details</TableHead>
+                <TableHead className="h-11 font-semibold text-zinc-500 text-xs uppercase tracking-wider w-[180px]">Specs</TableHead>
                 <TableHead className="h-11 font-semibold text-zinc-500 text-xs uppercase tracking-wider w-[160px]">Status</TableHead>
                 <TableHead className="h-11 font-semibold text-zinc-500 text-xs uppercase tracking-wider w-[140px]">Submitted</TableHead>
                 <TableHead className="h-11 font-semibold text-zinc-500 text-xs uppercase tracking-wider w-[180px] pr-6">Files</TableHead>
@@ -257,6 +263,17 @@ export function AdminDashboardClient({ jobs }: Props) {
                   </TableCell>
                   <TableCell className="align-top pt-4">
                     <p className="text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed line-clamp-2 pr-4">{job.description}</p>
+                  </TableCell>
+                  <TableCell className="align-top pt-4">
+                    {job.paperSize ? (
+                      <div className="text-xs text-zinc-600 dark:text-zinc-400 space-y-1">
+                        <p><span className="font-medium text-zinc-900 dark:text-zinc-100">{job.quantity}x</span> {job.paperSize} ({job.printType})</p>
+                        {job.finishing && job.finishing !== "NONE" && <p>+ {job.finishing.replace("BINDING_", "")}</p>}
+                        {job.estimatedPrice != null && <p className="font-semibold text-emerald-600 dark:text-emerald-400 mt-1">₱{job.estimatedPrice.toFixed(2)}</p>}
+                      </div>
+                    ) : (
+                      <span className="text-xs text-zinc-400 font-medium">—</span>
+                    )}
                   </TableCell>
                   <TableCell className="align-top pt-3.5">
                     <StatusSelect job={job} />
@@ -293,6 +310,13 @@ export function AdminDashboardClient({ jobs }: Props) {
                 <p className="text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed">
                   {job.description}
                 </p>
+                {job.paperSize && (
+                  <div className="mt-3 pt-3 border-t border-zinc-200 dark:border-zinc-800 text-xs text-zinc-600 dark:text-zinc-400 space-y-1">
+                    <p><span className="font-medium text-zinc-900 dark:text-zinc-100">{job.quantity}x</span> {job.paperSize} ({job.printType})</p>
+                    {job.finishing && job.finishing !== "NONE" && <p>+ {job.finishing.replace("BINDING_", "")}</p>}
+                    {job.estimatedPrice != null && <p className="font-semibold text-emerald-600 dark:text-emerald-400 mt-1">₱{job.estimatedPrice.toFixed(2)}</p>}
+                  </div>
+                )}
               </div>
 
               <div className="flex items-end justify-between pt-1">

@@ -42,6 +42,11 @@ export type SubmitPrintJobData = {
     originalName: string;
     fileType: string;
   };
+  paperSize?: string | null;
+  quantity?: number;
+  printType?: string | null;
+  finishing?: string | null;
+  estimatedPrice?: number;
 };
 
 export async function submitPrintJob(data: SubmitPrintJobData) {
@@ -72,6 +77,11 @@ export async function submitPrintJob(data: SubmitPrintJobData) {
           status: "PENDING",
           customerId: customer.id,
           trackingCode: trackingCode,
+          paperSize: data.paperSize,
+          quantity: data.quantity,
+          printType: data.printType,
+          finishing: data.finishing,
+          estimatedPrice: data.estimatedPrice,
         },
       });
 

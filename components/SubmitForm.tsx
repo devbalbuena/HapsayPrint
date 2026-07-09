@@ -1,16 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { SubmitSuccess } from "./SubmitSuccess";
-import { UploadCloudIcon, FileIcon, Loader2Icon, ArrowRightIcon, CheckCircleIcon } from "lucide-react";
+import { UploadCloudIcon, FileIcon, Loader2Icon, ArrowRightIcon, CheckCircleIcon, CalculatorIcon } from "lucide-react";
 import { uploadFiles } from "@/lib/uploadthing";
 import { submitPrintJob } from "@/app/actions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PAPER_SIZES, PRINT_TYPES, FINISHING_OPTIONS, calculateEstimate } from "@/lib/pricing";
 
 interface FormData {
   name: string;
@@ -18,12 +20,18 @@ interface FormData {
   email: string;
   description: string;
   file: File | null;
+  paperSize: string | null;
+  quantity: number;
+  printType: string | null;
+  finishing: string | null;
 }
 
 interface FormErrors {
   name?: string;
   contact?: string;
   description?: string;
+  paperSize?: string;
+  printType?: string;
 }
 
 export function SubmitForm() {
@@ -33,6 +41,10 @@ export function SubmitForm() {
     email: "",
     description: "",
     file: null,
+    paperSize: null,
+    quantity: 1,
+    printType: null,
+    finishing: "NONE",
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
@@ -41,11 +53,17 @@ export function SubmitForm() {
 
   const [trackingCode, setTrackingCode] = useState<string | null>(null);
 
+  const estimatedPrice = useMemo(() => {
+    return calculateEstimate(form.paperSize, form.printType, form.finishing, form.quantity);
+  }, [form.paperSize, form.printType, form.finishing, form.quantity]);
+
   function validate(): FormErrors {
     const errs: FormErrors = {};
     if (!form.name.trim()) errs.name = "Full name is required";
     if (!form.contact.trim()) errs.contact = "Contact number is required";
     if (!form.description.trim()) errs.description = "Job description is required";
+    if (!form.paperSize) errs.paperSize = "Paper size is required";
+    if (!form.printType) errs.printType = "Print type is required";
     return errs;
   }
 
@@ -100,6 +118,11 @@ export function SubmitForm() {
         email: form.email || null,
         description: form.description,
         file: fileData,
+        paperSize: form.paperSize,
+        quantity: form.quantity,
+        printType: form.printType,
+        finishing: form.finishing,
+        estimatedPrice,
       });
 
       if (result.success) {
@@ -123,7 +146,7 @@ export function SubmitForm() {
         name={form.name} 
         trackingCode={trackingCode || undefined}
         onReset={() => {
-          setForm({ name: "", contact: "", email: "", description: "", file: null });
+          setForm({ name: "", contact: "", email: "", description: "", file: null, paperSize: null, quantity: 1, printType: null, finishing: "NONE" });
           setFileName(null);
           setErrors({});
           setSubmitted(false);
@@ -219,6 +242,97 @@ export function SubmitForm() {
           {errors.description && <p className="text-xs text-rose-500 font-medium">{errors.description}</p>}
         </div>
 
+        {/* Print Specifications Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-5 bg-zinc-50/50 dark:bg-zinc-900/30 rounded-xl border border-zinc-200/60 dark:border-zinc-800">
+          
+          <div className="space-y-2">
+            <Label className="text-zinc-700 dark:text-zinc-300 font-medium">
+              Paper Size <span className="text-rose-500">*</span>
+            </Label>
+            <Select 
+              value={form.paperSize || ""} 
+              onValueChange={(val) => {
+                setForm(p => ({ ...p, paperSize: val }));
+                setErrors(p => ({ ...p, paperSize: undefined }));
+              }}
+            >
+              <SelectTrigger className={cn(
+                "h-11 bg-white dark:bg-zinc-950",
+                errors.paperSize && "border-rose-500 focus:ring-rose-500"
+              )}>
+                <SelectValue placeholder="Select paper size" />
+              </SelectTrigger>
+              <SelectContent>
+                {PAPER_SIZES.map(s => (
+                  <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {errors.paperSize && <p className="text-xs text-rose-500 font-medium">{errors.paperSize}</p>}
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-zinc-700 dark:text-zinc-300 font-medium">
+              Print Type <span className="text-rose-500">*</span>
+            </Label>
+            <Select 
+              value={form.printType || ""} 
+              onValueChange={(val) => {
+                setForm(p => ({ ...p, printType: val }));
+                setErrors(p => ({ ...p, printType: undefined }));
+              }}
+            >
+              <SelectTrigger className={cn(
+                "h-11 bg-white dark:bg-zinc-950",
+                errors.printType && "border-rose-500 focus:ring-rose-500"
+              )}>
+                <SelectValue placeholder="Select print type" />
+              </SelectTrigger>
+              <SelectContent>
+                {PRINT_TYPES.map(t => (
+                  <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {errors.printType && <p className="text-xs text-rose-500 font-medium">{errors.printType}</p>}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="quantity" className="text-zinc-700 dark:text-zinc-300 font-medium">
+              Quantity
+            </Label>
+            <Input
+              id="quantity"
+              name="quantity"
+              type="number"
+              min="1"
+              value={form.quantity}
+              onChange={(e) => setForm(p => ({ ...p, quantity: Math.max(1, parseInt(e.target.value) || 1) }))}
+              className="h-11 bg-white dark:bg-zinc-950"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-zinc-700 dark:text-zinc-300 font-medium">
+              Finishing
+            </Label>
+            <Select 
+              value={form.finishing || "NONE"} 
+              onValueChange={(val) => setForm(p => ({ ...p, finishing: val }))}
+            >
+              <SelectTrigger className="h-11 bg-white dark:bg-zinc-950">
+                <SelectValue placeholder="Select finishing" />
+              </SelectTrigger>
+              <SelectContent>
+                {FINISHING_OPTIONS.map(f => (
+                  <SelectItem key={f.value} value={f.value}>{f.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+        </div>
+
         {/* File Upload Zone */}
         <div className="space-y-2 pt-2">
           <Label htmlFor="file" className="text-zinc-700 dark:text-zinc-300 font-medium flex justify-between">
@@ -272,6 +386,26 @@ export function SubmitForm() {
             />
           </label>
         </div>
+
+        {/* Live Price Estimate */}
+        {estimatedPrice > 0 && (
+          <div className="bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/50 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                <CalculatorIcon className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-emerald-900 dark:text-emerald-100">Estimated Total</p>
+                <p className="text-xs text-emerald-700/70 dark:text-emerald-400/70">
+                  This is an estimate only. Final price will be confirmed by shop staff.
+                </p>
+              </div>
+            </div>
+            <div className="text-2xl font-bold tracking-tight text-emerald-700 dark:text-emerald-400 whitespace-nowrap">
+              ₱{estimatedPrice.toFixed(2)}
+            </div>
+          </div>
+        )}
 
         {/* Submit Button */}
         <div className="pt-4">

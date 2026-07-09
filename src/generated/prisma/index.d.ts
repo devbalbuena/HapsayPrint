@@ -2300,8 +2300,20 @@ export namespace Prisma {
 
   export type AggregateJob = {
     _count: JobCountAggregateOutputType | null
+    _avg: JobAvgAggregateOutputType | null
+    _sum: JobSumAggregateOutputType | null
     _min: JobMinAggregateOutputType | null
     _max: JobMaxAggregateOutputType | null
+  }
+
+  export type JobAvgAggregateOutputType = {
+    quantity: number | null
+    estimatedPrice: number | null
+  }
+
+  export type JobSumAggregateOutputType = {
+    quantity: number | null
+    estimatedPrice: number | null
   }
 
   export type JobMinAggregateOutputType = {
@@ -2311,6 +2323,11 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     trackingCode: string | null
+    paperSize: string | null
+    quantity: number | null
+    printType: string | null
+    finishing: string | null
+    estimatedPrice: number | null
     customerId: string | null
   }
 
@@ -2321,6 +2338,11 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     trackingCode: string | null
+    paperSize: string | null
+    quantity: number | null
+    printType: string | null
+    finishing: string | null
+    estimatedPrice: number | null
     customerId: string | null
   }
 
@@ -2331,10 +2353,25 @@ export namespace Prisma {
     createdAt: number
     updatedAt: number
     trackingCode: number
+    paperSize: number
+    quantity: number
+    printType: number
+    finishing: number
+    estimatedPrice: number
     customerId: number
     _all: number
   }
 
+
+  export type JobAvgAggregateInputType = {
+    quantity?: true
+    estimatedPrice?: true
+  }
+
+  export type JobSumAggregateInputType = {
+    quantity?: true
+    estimatedPrice?: true
+  }
 
   export type JobMinAggregateInputType = {
     id?: true
@@ -2343,6 +2380,11 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     trackingCode?: true
+    paperSize?: true
+    quantity?: true
+    printType?: true
+    finishing?: true
+    estimatedPrice?: true
     customerId?: true
   }
 
@@ -2353,6 +2395,11 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     trackingCode?: true
+    paperSize?: true
+    quantity?: true
+    printType?: true
+    finishing?: true
+    estimatedPrice?: true
     customerId?: true
   }
 
@@ -2363,6 +2410,11 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     trackingCode?: true
+    paperSize?: true
+    quantity?: true
+    printType?: true
+    finishing?: true
+    estimatedPrice?: true
     customerId?: true
     _all?: true
   }
@@ -2405,6 +2457,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: JobAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: JobSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: JobMinAggregateInputType
@@ -2435,6 +2499,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: JobCountAggregateInputType | true
+    _avg?: JobAvgAggregateInputType
+    _sum?: JobSumAggregateInputType
     _min?: JobMinAggregateInputType
     _max?: JobMaxAggregateInputType
   }
@@ -2446,8 +2512,15 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     trackingCode: string | null
+    paperSize: string | null
+    quantity: number | null
+    printType: string | null
+    finishing: string | null
+    estimatedPrice: number | null
     customerId: string
     _count: JobCountAggregateOutputType | null
+    _avg: JobAvgAggregateOutputType | null
+    _sum: JobSumAggregateOutputType | null
     _min: JobMinAggregateOutputType | null
     _max: JobMaxAggregateOutputType | null
   }
@@ -2473,6 +2546,11 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     trackingCode?: boolean
+    paperSize?: boolean
+    quantity?: boolean
+    printType?: boolean
+    finishing?: boolean
+    estimatedPrice?: boolean
     customerId?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     files?: boolean | Job$filesArgs<ExtArgs>
@@ -2486,6 +2564,11 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     trackingCode?: boolean
+    paperSize?: boolean
+    quantity?: boolean
+    printType?: boolean
+    finishing?: boolean
+    estimatedPrice?: boolean
     customerId?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["job"]>
@@ -2497,6 +2580,11 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     trackingCode?: boolean
+    paperSize?: boolean
+    quantity?: boolean
+    printType?: boolean
+    finishing?: boolean
+    estimatedPrice?: boolean
     customerId?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["job"]>
@@ -2508,10 +2596,15 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     trackingCode?: boolean
+    paperSize?: boolean
+    quantity?: boolean
+    printType?: boolean
+    finishing?: boolean
+    estimatedPrice?: boolean
     customerId?: boolean
   }
 
-  export type JobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "description" | "status" | "createdAt" | "updatedAt" | "trackingCode" | "customerId", ExtArgs["result"]["job"]>
+  export type JobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "description" | "status" | "createdAt" | "updatedAt" | "trackingCode" | "paperSize" | "quantity" | "printType" | "finishing" | "estimatedPrice" | "customerId", ExtArgs["result"]["job"]>
   export type JobInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     files?: boolean | Job$filesArgs<ExtArgs>
@@ -2537,6 +2630,11 @@ export namespace Prisma {
       createdAt: Date
       updatedAt: Date
       trackingCode: string | null
+      paperSize: string | null
+      quantity: number | null
+      printType: string | null
+      finishing: string | null
+      estimatedPrice: number | null
       customerId: string
     }, ExtArgs["result"]["job"]>
     composites: {}
@@ -2969,6 +3067,11 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"Job", 'DateTime'>
     readonly updatedAt: FieldRef<"Job", 'DateTime'>
     readonly trackingCode: FieldRef<"Job", 'String'>
+    readonly paperSize: FieldRef<"Job", 'String'>
+    readonly quantity: FieldRef<"Job", 'Int'>
+    readonly printType: FieldRef<"Job", 'String'>
+    readonly finishing: FieldRef<"Job", 'String'>
+    readonly estimatedPrice: FieldRef<"Job", 'Float'>
     readonly customerId: FieldRef<"Job", 'String'>
   }
     
@@ -5534,6 +5637,11 @@ export namespace Prisma {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     trackingCode: 'trackingCode',
+    paperSize: 'paperSize',
+    quantity: 'quantity',
+    printType: 'printType',
+    finishing: 'finishing',
+    estimatedPrice: 'estimatedPrice',
     customerId: 'customerId'
   };
 
@@ -5647,6 +5755,20 @@ export namespace Prisma {
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
   /**
    * Deep Input Types
    */
@@ -5717,6 +5839,11 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Job"> | Date | string
     updatedAt?: DateTimeFilter<"Job"> | Date | string
     trackingCode?: StringNullableFilter<"Job"> | string | null
+    paperSize?: StringNullableFilter<"Job"> | string | null
+    quantity?: IntNullableFilter<"Job"> | number | null
+    printType?: StringNullableFilter<"Job"> | string | null
+    finishing?: StringNullableFilter<"Job"> | string | null
+    estimatedPrice?: FloatNullableFilter<"Job"> | number | null
     customerId?: StringFilter<"Job"> | string
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     files?: FileUploadListRelationFilter
@@ -5729,6 +5856,11 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     trackingCode?: SortOrderInput | SortOrder
+    paperSize?: SortOrderInput | SortOrder
+    quantity?: SortOrderInput | SortOrder
+    printType?: SortOrderInput | SortOrder
+    finishing?: SortOrderInput | SortOrder
+    estimatedPrice?: SortOrderInput | SortOrder
     customerId?: SortOrder
     customer?: CustomerOrderByWithRelationInput
     files?: FileUploadOrderByRelationAggregateInput
@@ -5744,6 +5876,11 @@ export namespace Prisma {
     status?: EnumJobStatusFilter<"Job"> | $Enums.JobStatus
     createdAt?: DateTimeFilter<"Job"> | Date | string
     updatedAt?: DateTimeFilter<"Job"> | Date | string
+    paperSize?: StringNullableFilter<"Job"> | string | null
+    quantity?: IntNullableFilter<"Job"> | number | null
+    printType?: StringNullableFilter<"Job"> | string | null
+    finishing?: StringNullableFilter<"Job"> | string | null
+    estimatedPrice?: FloatNullableFilter<"Job"> | number | null
     customerId?: StringFilter<"Job"> | string
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     files?: FileUploadListRelationFilter
@@ -5756,10 +5893,17 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     trackingCode?: SortOrderInput | SortOrder
+    paperSize?: SortOrderInput | SortOrder
+    quantity?: SortOrderInput | SortOrder
+    printType?: SortOrderInput | SortOrder
+    finishing?: SortOrderInput | SortOrder
+    estimatedPrice?: SortOrderInput | SortOrder
     customerId?: SortOrder
     _count?: JobCountOrderByAggregateInput
+    _avg?: JobAvgOrderByAggregateInput
     _max?: JobMaxOrderByAggregateInput
     _min?: JobMinOrderByAggregateInput
+    _sum?: JobSumOrderByAggregateInput
   }
 
   export type JobScalarWhereWithAggregatesInput = {
@@ -5772,6 +5916,11 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Job"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Job"> | Date | string
     trackingCode?: StringNullableWithAggregatesFilter<"Job"> | string | null
+    paperSize?: StringNullableWithAggregatesFilter<"Job"> | string | null
+    quantity?: IntNullableWithAggregatesFilter<"Job"> | number | null
+    printType?: StringNullableWithAggregatesFilter<"Job"> | string | null
+    finishing?: StringNullableWithAggregatesFilter<"Job"> | string | null
+    estimatedPrice?: FloatNullableWithAggregatesFilter<"Job"> | number | null
     customerId?: StringWithAggregatesFilter<"Job"> | string
   }
 
@@ -5959,6 +6108,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     trackingCode?: string | null
+    paperSize?: string | null
+    quantity?: number | null
+    printType?: string | null
+    finishing?: string | null
+    estimatedPrice?: number | null
     customer: CustomerCreateNestedOneWithoutJobsInput
     files?: FileUploadCreateNestedManyWithoutJobInput
   }
@@ -5970,6 +6124,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     trackingCode?: string | null
+    paperSize?: string | null
+    quantity?: number | null
+    printType?: string | null
+    finishing?: string | null
+    estimatedPrice?: number | null
     customerId: string
     files?: FileUploadUncheckedCreateNestedManyWithoutJobInput
   }
@@ -5981,6 +6140,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paperSize?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    printType?: NullableStringFieldUpdateOperationsInput | string | null
+    finishing?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     customer?: CustomerUpdateOneRequiredWithoutJobsNestedInput
     files?: FileUploadUpdateManyWithoutJobNestedInput
   }
@@ -5992,6 +6156,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paperSize?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    printType?: NullableStringFieldUpdateOperationsInput | string | null
+    finishing?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     customerId?: StringFieldUpdateOperationsInput | string
     files?: FileUploadUncheckedUpdateManyWithoutJobNestedInput
   }
@@ -6003,6 +6172,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     trackingCode?: string | null
+    paperSize?: string | null
+    quantity?: number | null
+    printType?: string | null
+    finishing?: string | null
+    estimatedPrice?: number | null
     customerId: string
   }
 
@@ -6013,6 +6187,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paperSize?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    printType?: NullableStringFieldUpdateOperationsInput | string | null
+    finishing?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type JobUncheckedUpdateManyInput = {
@@ -6022,6 +6201,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paperSize?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    printType?: NullableStringFieldUpdateOperationsInput | string | null
+    finishing?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     customerId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -6287,6 +6471,28 @@ export namespace Prisma {
     not?: NestedEnumJobStatusFilter<$PrismaModel> | $Enums.JobStatus
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type CustomerScalarRelationFilter = {
     is?: CustomerWhereInput
     isNot?: CustomerWhereInput
@@ -6309,7 +6515,17 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     trackingCode?: SortOrder
+    paperSize?: SortOrder
+    quantity?: SortOrder
+    printType?: SortOrder
+    finishing?: SortOrder
+    estimatedPrice?: SortOrder
     customerId?: SortOrder
+  }
+
+  export type JobAvgOrderByAggregateInput = {
+    quantity?: SortOrder
+    estimatedPrice?: SortOrder
   }
 
   export type JobMaxOrderByAggregateInput = {
@@ -6319,6 +6535,11 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     trackingCode?: SortOrder
+    paperSize?: SortOrder
+    quantity?: SortOrder
+    printType?: SortOrder
+    finishing?: SortOrder
+    estimatedPrice?: SortOrder
     customerId?: SortOrder
   }
 
@@ -6329,7 +6550,17 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     trackingCode?: SortOrder
+    paperSize?: SortOrder
+    quantity?: SortOrder
+    printType?: SortOrder
+    finishing?: SortOrder
+    estimatedPrice?: SortOrder
     customerId?: SortOrder
+  }
+
+  export type JobSumOrderByAggregateInput = {
+    quantity?: SortOrder
+    estimatedPrice?: SortOrder
   }
 
   export type EnumJobStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -6340,6 +6571,38 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumJobStatusFilter<$PrismaModel>
     _max?: NestedEnumJobStatusFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type JobScalarRelationFilter = {
@@ -6477,6 +6740,22 @@ export namespace Prisma {
 
   export type EnumJobStatusFieldUpdateOperationsInput = {
     set?: $Enums.JobStatus
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type CustomerUpdateOneRequiredWithoutJobsNestedInput = {
@@ -6645,6 +6924,17 @@ export namespace Prisma {
     not?: NestedEnumJobStatusFilter<$PrismaModel> | $Enums.JobStatus
   }
 
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedEnumJobStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.JobStatus | EnumJobStatusFieldRefInput<$PrismaModel>
     in?: $Enums.JobStatus[] | ListEnumJobStatusFieldRefInput<$PrismaModel>
@@ -6655,6 +6945,38 @@ export namespace Prisma {
     _max?: NestedEnumJobStatusFilter<$PrismaModel>
   }
 
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
   export type JobCreateWithoutCustomerInput = {
     id?: string
     description: string
@@ -6662,6 +6984,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     trackingCode?: string | null
+    paperSize?: string | null
+    quantity?: number | null
+    printType?: string | null
+    finishing?: string | null
+    estimatedPrice?: number | null
     files?: FileUploadCreateNestedManyWithoutJobInput
   }
 
@@ -6672,6 +6999,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     trackingCode?: string | null
+    paperSize?: string | null
+    quantity?: number | null
+    printType?: string | null
+    finishing?: string | null
+    estimatedPrice?: number | null
     files?: FileUploadUncheckedCreateNestedManyWithoutJobInput
   }
 
@@ -6711,6 +7043,11 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Job"> | Date | string
     updatedAt?: DateTimeFilter<"Job"> | Date | string
     trackingCode?: StringNullableFilter<"Job"> | string | null
+    paperSize?: StringNullableFilter<"Job"> | string | null
+    quantity?: IntNullableFilter<"Job"> | number | null
+    printType?: StringNullableFilter<"Job"> | string | null
+    finishing?: StringNullableFilter<"Job"> | string | null
+    estimatedPrice?: FloatNullableFilter<"Job"> | number | null
     customerId?: StringFilter<"Job"> | string
   }
 
@@ -6823,6 +7160,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     trackingCode?: string | null
+    paperSize?: string | null
+    quantity?: number | null
+    printType?: string | null
+    finishing?: string | null
+    estimatedPrice?: number | null
     customer: CustomerCreateNestedOneWithoutJobsInput
   }
 
@@ -6833,6 +7175,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     trackingCode?: string | null
+    paperSize?: string | null
+    quantity?: number | null
+    printType?: string | null
+    finishing?: string | null
+    estimatedPrice?: number | null
     customerId: string
   }
 
@@ -6859,6 +7206,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paperSize?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    printType?: NullableStringFieldUpdateOperationsInput | string | null
+    finishing?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     customer?: CustomerUpdateOneRequiredWithoutJobsNestedInput
   }
 
@@ -6869,6 +7221,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paperSize?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    printType?: NullableStringFieldUpdateOperationsInput | string | null
+    finishing?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     customerId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -6879,6 +7236,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     trackingCode?: string | null
+    paperSize?: string | null
+    quantity?: number | null
+    printType?: string | null
+    finishing?: string | null
+    estimatedPrice?: number | null
   }
 
   export type JobUpdateWithoutCustomerInput = {
@@ -6888,6 +7250,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paperSize?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    printType?: NullableStringFieldUpdateOperationsInput | string | null
+    finishing?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     files?: FileUploadUpdateManyWithoutJobNestedInput
   }
 
@@ -6898,6 +7265,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paperSize?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    printType?: NullableStringFieldUpdateOperationsInput | string | null
+    finishing?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     files?: FileUploadUncheckedUpdateManyWithoutJobNestedInput
   }
 
@@ -6908,6 +7280,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paperSize?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    printType?: NullableStringFieldUpdateOperationsInput | string | null
+    finishing?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type FileUploadCreateManyJobInput = {
