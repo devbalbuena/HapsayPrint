@@ -131,7 +131,11 @@ function StatusSelect({ job }: { job: Job }) {
         setOptimisticStatus(previous);
         toast.error(result.error ?? "Failed to update status.");
       } else {
-        toast.success(`Job marked as ${STATUS_LABELS[newStatus as Job["status"]]}`);
+        if (result.notified) {
+          toast.success("Status updated and customer notified via email");
+        } else {
+          toast.success(`Job marked as ${STATUS_LABELS[newStatus as Job["status"]]}`);
+        }
       }
     });
   }

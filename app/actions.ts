@@ -4,6 +4,10 @@ import { prisma } from "@/src/db";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 const VALID_STATUSES = ["PENDING", "IN_PROGRESS", "READY_FOR_PICKUP", "DELIVERED"] as const;
 type JobStatus = typeof VALID_STATUSES[number];
 
@@ -19,13 +23,30 @@ export async function updateJobStatus(jobId: string, newStatus: string) {
   }
 
   try {
-    await prisma.job.update({
+    const updatedJob = await prisma.job.update({
       where: { id: jobId },
       data: { status: newStatus as JobStatus },
+      include: { customer: true },
     });
 
+    let notified = false;
+
+    if (newStatus === "READY_FOR_PICKUP" && updatedJob.customer.email) {
+      try {
+        await resend.emails.send({
+          from: 'onboarding@resend.dev',
+          to: updatedJob.customer.email,
+          subject: 'Your order at HapsayPrint is ready for pickup!',
+          text: `Hi ${updatedJob.customer.name},\n\nYour print order is now ready for pickup at our shop!\n\nOrder Details:\n${updatedJob.description}\n\n${updatedJob.trackingCode ? `Tracking Code: ${updatedJob.trackingCode}\n\n` : ''}See you soon!\n- The HapsayPrint Team`,
+        });
+        notified = true;
+      } catch (emailError) {
+        console.error("Failed to send pickup notification email:", emailError);
+      }
+    }
+
     revalidatePath("/admin");
-    return { success: true };
+    return { success: true, notified };
   } catch (error) {
     console.error("Failed to update job status:", error);
     return { success: false, error: "Failed to update status. Please try again." };
