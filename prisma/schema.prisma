@@ -41,6 +41,7 @@ model Job {
   customer    Customer    @relation(fields: [customerId], references: [id])
 
   files       FileUpload[]
+  notes       JobNote[]
 }
 
 model FileUpload {
@@ -61,4 +62,17 @@ model User {
   password  String
   role      String   @default("ADMIN")
   createdAt DateTime @default(now())
+  notes     JobNote[]
+}
+
+model JobNote {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+
+  jobId     String
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  adminId   String
+  admin     User     @relation(fields: [adminId], references: [id])
 }

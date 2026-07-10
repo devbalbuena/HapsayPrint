@@ -161,6 +161,14 @@ exports.Prisma.UserScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.JobNoteScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  createdAt: 'createdAt',
+  jobId: 'jobId',
+  adminId: 'adminId'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -186,7 +194,8 @@ exports.Prisma.ModelName = {
   Customer: 'Customer',
   Job: 'Job',
   FileUpload: 'FileUpload',
-  User: 'User'
+  User: 'User',
+  JobNote: 'JobNote'
 };
 
 /**

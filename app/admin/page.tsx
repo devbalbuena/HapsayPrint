@@ -29,6 +29,10 @@ export default async function AdminPage() {
       include: {
         customer: true,
         files: true,
+        notes: {
+          orderBy: { createdAt: "desc" },
+          include: { admin: true },
+        },
       },
     }),
     getAnalytics(),

@@ -33,6 +33,11 @@ export type FileUpload = $Result.DefaultSelection<Prisma.$FileUploadPayload>
  * 
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
+/**
+ * Model JobNote
+ * 
+ */
+export type JobNote = $Result.DefaultSelection<Prisma.$JobNotePayload>
 
 /**
  * Enums
@@ -213,6 +218,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.jobNote`: Exposes CRUD operations for the **JobNote** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more JobNotes
+    * const jobNotes = await prisma.jobNote.findMany()
+    * ```
+    */
+  get jobNote(): Prisma.JobNoteDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -650,7 +665,8 @@ export namespace Prisma {
     Customer: 'Customer',
     Job: 'Job',
     FileUpload: 'FileUpload',
-    User: 'User'
+    User: 'User',
+    JobNote: 'JobNote'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -666,7 +682,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "customer" | "job" | "fileUpload" | "user"
+      modelProps: "customer" | "job" | "fileUpload" | "user" | "jobNote"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -966,6 +982,80 @@ export namespace Prisma {
           }
         }
       }
+      JobNote: {
+        payload: Prisma.$JobNotePayload<ExtArgs>
+        fields: Prisma.JobNoteFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.JobNoteFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobNotePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.JobNoteFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobNotePayload>
+          }
+          findFirst: {
+            args: Prisma.JobNoteFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobNotePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.JobNoteFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobNotePayload>
+          }
+          findMany: {
+            args: Prisma.JobNoteFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobNotePayload>[]
+          }
+          create: {
+            args: Prisma.JobNoteCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobNotePayload>
+          }
+          createMany: {
+            args: Prisma.JobNoteCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.JobNoteCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobNotePayload>[]
+          }
+          delete: {
+            args: Prisma.JobNoteDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobNotePayload>
+          }
+          update: {
+            args: Prisma.JobNoteUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobNotePayload>
+          }
+          deleteMany: {
+            args: Prisma.JobNoteDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.JobNoteUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.JobNoteUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobNotePayload>[]
+          }
+          upsert: {
+            args: Prisma.JobNoteUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$JobNotePayload>
+          }
+          aggregate: {
+            args: Prisma.JobNoteAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateJobNote>
+          }
+          groupBy: {
+            args: Prisma.JobNoteGroupByArgs<ExtArgs>
+            result: $Utils.Optional<JobNoteGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.JobNoteCountArgs<ExtArgs>
+            result: $Utils.Optional<JobNoteCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1078,6 +1168,7 @@ export namespace Prisma {
     job?: JobOmit
     fileUpload?: FileUploadOmit
     user?: UserOmit
+    jobNote?: JobNoteOmit
   }
 
   /* Types for Logging */
@@ -1190,10 +1281,12 @@ export namespace Prisma {
 
   export type JobCountOutputType = {
     files: number
+    notes: number
   }
 
   export type JobCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     files?: boolean | JobCountOutputTypeCountFilesArgs
+    notes?: boolean | JobCountOutputTypeCountNotesArgs
   }
 
   // Custom InputTypes
@@ -1212,6 +1305,44 @@ export namespace Prisma {
    */
   export type JobCountOutputTypeCountFilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FileUploadWhereInput
+  }
+
+  /**
+   * JobCountOutputType without action
+   */
+  export type JobCountOutputTypeCountNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: JobNoteWhereInput
+  }
+
+
+  /**
+   * Count Type UserCountOutputType
+   */
+
+  export type UserCountOutputType = {
+    notes: number
+  }
+
+  export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    notes?: boolean | UserCountOutputTypeCountNotesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserCountOutputType
+     */
+    select?: UserCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: JobNoteWhereInput
   }
 
 
@@ -2554,6 +2685,7 @@ export namespace Prisma {
     customerId?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     files?: boolean | Job$filesArgs<ExtArgs>
+    notes?: boolean | Job$notesArgs<ExtArgs>
     _count?: boolean | JobCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["job"]>
 
@@ -2608,6 +2740,7 @@ export namespace Prisma {
   export type JobInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     files?: boolean | Job$filesArgs<ExtArgs>
+    notes?: boolean | Job$notesArgs<ExtArgs>
     _count?: boolean | JobCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type JobIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2622,6 +2755,7 @@ export namespace Prisma {
     objects: {
       customer: Prisma.$CustomerPayload<ExtArgs>
       files: Prisma.$FileUploadPayload<ExtArgs>[]
+      notes: Prisma.$JobNotePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3032,6 +3166,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     customer<T extends CustomerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CustomerDefaultArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     files<T extends Job$filesArgs<ExtArgs> = {}>(args?: Subset<T, Job$filesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FileUploadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    notes<T extends Job$notesArgs<ExtArgs> = {}>(args?: Subset<T, Job$notesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3495,6 +3630,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FileUploadScalarFieldEnum | FileUploadScalarFieldEnum[]
+  }
+
+  /**
+   * Job.notes
+   */
+  export type Job$notesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobNote
+     */
+    select?: JobNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobNote
+     */
+    omit?: JobNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobNoteInclude<ExtArgs> | null
+    where?: JobNoteWhereInput
+    orderBy?: JobNoteOrderByWithRelationInput | JobNoteOrderByWithRelationInput[]
+    cursor?: JobNoteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: JobNoteScalarFieldEnum | JobNoteScalarFieldEnum[]
   }
 
   /**
@@ -4764,6 +4923,8 @@ export namespace Prisma {
     password?: boolean
     role?: boolean
     createdAt?: boolean
+    notes?: boolean | User$notesArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -4794,10 +4955,18 @@ export namespace Prisma {
   }
 
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "createdAt", ExtArgs["result"]["user"]>
+  export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    notes?: boolean | User$notesArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
-    objects: {}
+    objects: {
+      notes: Prisma.$JobNotePayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string | null
@@ -5199,6 +5368,7 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    notes<T extends User$notesArgs<ExtArgs> = {}>(args?: Subset<T, User$notesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5251,6 +5421,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
@@ -5269,6 +5443,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
@@ -5286,6 +5464,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * Filter, which User to fetch.
      */
@@ -5335,6 +5517,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter, which User to fetch.
      */
     where?: UserWhereInput
@@ -5382,6 +5568,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * Filter, which Users to fetch.
      */
@@ -5431,6 +5621,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * The data needed to create a User.
      */
     data: XOR<UserCreateInput, UserUncheckedCreateInput>
@@ -5478,6 +5672,10 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
     /**
      * The data needed to update a User.
      */
@@ -5545,6 +5743,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * The filter to search for the User to update in case it exists.
      */
     where: UserWhereUniqueInput
@@ -5571,6 +5773,10 @@ export namespace Prisma {
      */
     omit?: UserOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    /**
      * Filter which User to delete.
      */
     where: UserWhereUniqueInput
@@ -5591,6 +5797,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.notes
+   */
+  export type User$notesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobNote
+     */
+    select?: JobNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobNote
+     */
+    omit?: JobNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobNoteInclude<ExtArgs> | null
+    where?: JobNoteWhereInput
+    orderBy?: JobNoteOrderByWithRelationInput | JobNoteOrderByWithRelationInput[]
+    cursor?: JobNoteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: JobNoteScalarFieldEnum | JobNoteScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5602,6 +5832,1081 @@ export namespace Prisma {
      * Omit specific fields from the User
      */
     omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model JobNote
+   */
+
+  export type AggregateJobNote = {
+    _count: JobNoteCountAggregateOutputType | null
+    _min: JobNoteMinAggregateOutputType | null
+    _max: JobNoteMaxAggregateOutputType | null
+  }
+
+  export type JobNoteMinAggregateOutputType = {
+    id: string | null
+    content: string | null
+    createdAt: Date | null
+    jobId: string | null
+    adminId: string | null
+  }
+
+  export type JobNoteMaxAggregateOutputType = {
+    id: string | null
+    content: string | null
+    createdAt: Date | null
+    jobId: string | null
+    adminId: string | null
+  }
+
+  export type JobNoteCountAggregateOutputType = {
+    id: number
+    content: number
+    createdAt: number
+    jobId: number
+    adminId: number
+    _all: number
+  }
+
+
+  export type JobNoteMinAggregateInputType = {
+    id?: true
+    content?: true
+    createdAt?: true
+    jobId?: true
+    adminId?: true
+  }
+
+  export type JobNoteMaxAggregateInputType = {
+    id?: true
+    content?: true
+    createdAt?: true
+    jobId?: true
+    adminId?: true
+  }
+
+  export type JobNoteCountAggregateInputType = {
+    id?: true
+    content?: true
+    createdAt?: true
+    jobId?: true
+    adminId?: true
+    _all?: true
+  }
+
+  export type JobNoteAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which JobNote to aggregate.
+     */
+    where?: JobNoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JobNotes to fetch.
+     */
+    orderBy?: JobNoteOrderByWithRelationInput | JobNoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: JobNoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JobNotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JobNotes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned JobNotes
+    **/
+    _count?: true | JobNoteCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: JobNoteMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: JobNoteMaxAggregateInputType
+  }
+
+  export type GetJobNoteAggregateType<T extends JobNoteAggregateArgs> = {
+        [P in keyof T & keyof AggregateJobNote]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateJobNote[P]>
+      : GetScalarType<T[P], AggregateJobNote[P]>
+  }
+
+
+
+
+  export type JobNoteGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: JobNoteWhereInput
+    orderBy?: JobNoteOrderByWithAggregationInput | JobNoteOrderByWithAggregationInput[]
+    by: JobNoteScalarFieldEnum[] | JobNoteScalarFieldEnum
+    having?: JobNoteScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: JobNoteCountAggregateInputType | true
+    _min?: JobNoteMinAggregateInputType
+    _max?: JobNoteMaxAggregateInputType
+  }
+
+  export type JobNoteGroupByOutputType = {
+    id: string
+    content: string
+    createdAt: Date
+    jobId: string
+    adminId: string
+    _count: JobNoteCountAggregateOutputType | null
+    _min: JobNoteMinAggregateOutputType | null
+    _max: JobNoteMaxAggregateOutputType | null
+  }
+
+  type GetJobNoteGroupByPayload<T extends JobNoteGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<JobNoteGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof JobNoteGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], JobNoteGroupByOutputType[P]>
+            : GetScalarType<T[P], JobNoteGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type JobNoteSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    content?: boolean
+    createdAt?: boolean
+    jobId?: boolean
+    adminId?: boolean
+    job?: boolean | JobDefaultArgs<ExtArgs>
+    admin?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["jobNote"]>
+
+  export type JobNoteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    content?: boolean
+    createdAt?: boolean
+    jobId?: boolean
+    adminId?: boolean
+    job?: boolean | JobDefaultArgs<ExtArgs>
+    admin?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["jobNote"]>
+
+  export type JobNoteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    content?: boolean
+    createdAt?: boolean
+    jobId?: boolean
+    adminId?: boolean
+    job?: boolean | JobDefaultArgs<ExtArgs>
+    admin?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["jobNote"]>
+
+  export type JobNoteSelectScalar = {
+    id?: boolean
+    content?: boolean
+    createdAt?: boolean
+    jobId?: boolean
+    adminId?: boolean
+  }
+
+  export type JobNoteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "content" | "createdAt" | "jobId" | "adminId", ExtArgs["result"]["jobNote"]>
+  export type JobNoteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    job?: boolean | JobDefaultArgs<ExtArgs>
+    admin?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type JobNoteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    job?: boolean | JobDefaultArgs<ExtArgs>
+    admin?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type JobNoteIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    job?: boolean | JobDefaultArgs<ExtArgs>
+    admin?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $JobNotePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "JobNote"
+    objects: {
+      job: Prisma.$JobPayload<ExtArgs>
+      admin: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      content: string
+      createdAt: Date
+      jobId: string
+      adminId: string
+    }, ExtArgs["result"]["jobNote"]>
+    composites: {}
+  }
+
+  type JobNoteGetPayload<S extends boolean | null | undefined | JobNoteDefaultArgs> = $Result.GetResult<Prisma.$JobNotePayload, S>
+
+  type JobNoteCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<JobNoteFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: JobNoteCountAggregateInputType | true
+    }
+
+  export interface JobNoteDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['JobNote'], meta: { name: 'JobNote' } }
+    /**
+     * Find zero or one JobNote that matches the filter.
+     * @param {JobNoteFindUniqueArgs} args - Arguments to find a JobNote
+     * @example
+     * // Get one JobNote
+     * const jobNote = await prisma.jobNote.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends JobNoteFindUniqueArgs>(args: SelectSubset<T, JobNoteFindUniqueArgs<ExtArgs>>): Prisma__JobNoteClient<$Result.GetResult<Prisma.$JobNotePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one JobNote that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {JobNoteFindUniqueOrThrowArgs} args - Arguments to find a JobNote
+     * @example
+     * // Get one JobNote
+     * const jobNote = await prisma.jobNote.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends JobNoteFindUniqueOrThrowArgs>(args: SelectSubset<T, JobNoteFindUniqueOrThrowArgs<ExtArgs>>): Prisma__JobNoteClient<$Result.GetResult<Prisma.$JobNotePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first JobNote that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobNoteFindFirstArgs} args - Arguments to find a JobNote
+     * @example
+     * // Get one JobNote
+     * const jobNote = await prisma.jobNote.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends JobNoteFindFirstArgs>(args?: SelectSubset<T, JobNoteFindFirstArgs<ExtArgs>>): Prisma__JobNoteClient<$Result.GetResult<Prisma.$JobNotePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first JobNote that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobNoteFindFirstOrThrowArgs} args - Arguments to find a JobNote
+     * @example
+     * // Get one JobNote
+     * const jobNote = await prisma.jobNote.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends JobNoteFindFirstOrThrowArgs>(args?: SelectSubset<T, JobNoteFindFirstOrThrowArgs<ExtArgs>>): Prisma__JobNoteClient<$Result.GetResult<Prisma.$JobNotePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more JobNotes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobNoteFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all JobNotes
+     * const jobNotes = await prisma.jobNote.findMany()
+     * 
+     * // Get first 10 JobNotes
+     * const jobNotes = await prisma.jobNote.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const jobNoteWithIdOnly = await prisma.jobNote.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends JobNoteFindManyArgs>(args?: SelectSubset<T, JobNoteFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a JobNote.
+     * @param {JobNoteCreateArgs} args - Arguments to create a JobNote.
+     * @example
+     * // Create one JobNote
+     * const JobNote = await prisma.jobNote.create({
+     *   data: {
+     *     // ... data to create a JobNote
+     *   }
+     * })
+     * 
+     */
+    create<T extends JobNoteCreateArgs>(args: SelectSubset<T, JobNoteCreateArgs<ExtArgs>>): Prisma__JobNoteClient<$Result.GetResult<Prisma.$JobNotePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many JobNotes.
+     * @param {JobNoteCreateManyArgs} args - Arguments to create many JobNotes.
+     * @example
+     * // Create many JobNotes
+     * const jobNote = await prisma.jobNote.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends JobNoteCreateManyArgs>(args?: SelectSubset<T, JobNoteCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many JobNotes and returns the data saved in the database.
+     * @param {JobNoteCreateManyAndReturnArgs} args - Arguments to create many JobNotes.
+     * @example
+     * // Create many JobNotes
+     * const jobNote = await prisma.jobNote.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many JobNotes and only return the `id`
+     * const jobNoteWithIdOnly = await prisma.jobNote.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends JobNoteCreateManyAndReturnArgs>(args?: SelectSubset<T, JobNoteCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobNotePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a JobNote.
+     * @param {JobNoteDeleteArgs} args - Arguments to delete one JobNote.
+     * @example
+     * // Delete one JobNote
+     * const JobNote = await prisma.jobNote.delete({
+     *   where: {
+     *     // ... filter to delete one JobNote
+     *   }
+     * })
+     * 
+     */
+    delete<T extends JobNoteDeleteArgs>(args: SelectSubset<T, JobNoteDeleteArgs<ExtArgs>>): Prisma__JobNoteClient<$Result.GetResult<Prisma.$JobNotePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one JobNote.
+     * @param {JobNoteUpdateArgs} args - Arguments to update one JobNote.
+     * @example
+     * // Update one JobNote
+     * const jobNote = await prisma.jobNote.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends JobNoteUpdateArgs>(args: SelectSubset<T, JobNoteUpdateArgs<ExtArgs>>): Prisma__JobNoteClient<$Result.GetResult<Prisma.$JobNotePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more JobNotes.
+     * @param {JobNoteDeleteManyArgs} args - Arguments to filter JobNotes to delete.
+     * @example
+     * // Delete a few JobNotes
+     * const { count } = await prisma.jobNote.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends JobNoteDeleteManyArgs>(args?: SelectSubset<T, JobNoteDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more JobNotes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobNoteUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many JobNotes
+     * const jobNote = await prisma.jobNote.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends JobNoteUpdateManyArgs>(args: SelectSubset<T, JobNoteUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more JobNotes and returns the data updated in the database.
+     * @param {JobNoteUpdateManyAndReturnArgs} args - Arguments to update many JobNotes.
+     * @example
+     * // Update many JobNotes
+     * const jobNote = await prisma.jobNote.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more JobNotes and only return the `id`
+     * const jobNoteWithIdOnly = await prisma.jobNote.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends JobNoteUpdateManyAndReturnArgs>(args: SelectSubset<T, JobNoteUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JobNotePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one JobNote.
+     * @param {JobNoteUpsertArgs} args - Arguments to update or create a JobNote.
+     * @example
+     * // Update or create a JobNote
+     * const jobNote = await prisma.jobNote.upsert({
+     *   create: {
+     *     // ... data to create a JobNote
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the JobNote we want to update
+     *   }
+     * })
+     */
+    upsert<T extends JobNoteUpsertArgs>(args: SelectSubset<T, JobNoteUpsertArgs<ExtArgs>>): Prisma__JobNoteClient<$Result.GetResult<Prisma.$JobNotePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of JobNotes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobNoteCountArgs} args - Arguments to filter JobNotes to count.
+     * @example
+     * // Count the number of JobNotes
+     * const count = await prisma.jobNote.count({
+     *   where: {
+     *     // ... the filter for the JobNotes we want to count
+     *   }
+     * })
+    **/
+    count<T extends JobNoteCountArgs>(
+      args?: Subset<T, JobNoteCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], JobNoteCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a JobNote.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobNoteAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends JobNoteAggregateArgs>(args: Subset<T, JobNoteAggregateArgs>): Prisma.PrismaPromise<GetJobNoteAggregateType<T>>
+
+    /**
+     * Group by JobNote.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {JobNoteGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends JobNoteGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: JobNoteGroupByArgs['orderBy'] }
+        : { orderBy?: JobNoteGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, JobNoteGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetJobNoteGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the JobNote model
+   */
+  readonly fields: JobNoteFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for JobNote.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__JobNoteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    job<T extends JobDefaultArgs<ExtArgs> = {}>(args?: Subset<T, JobDefaultArgs<ExtArgs>>): Prisma__JobClient<$Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    admin<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the JobNote model
+   */
+  interface JobNoteFieldRefs {
+    readonly id: FieldRef<"JobNote", 'String'>
+    readonly content: FieldRef<"JobNote", 'String'>
+    readonly createdAt: FieldRef<"JobNote", 'DateTime'>
+    readonly jobId: FieldRef<"JobNote", 'String'>
+    readonly adminId: FieldRef<"JobNote", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * JobNote findUnique
+   */
+  export type JobNoteFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobNote
+     */
+    select?: JobNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobNote
+     */
+    omit?: JobNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobNoteInclude<ExtArgs> | null
+    /**
+     * Filter, which JobNote to fetch.
+     */
+    where: JobNoteWhereUniqueInput
+  }
+
+  /**
+   * JobNote findUniqueOrThrow
+   */
+  export type JobNoteFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobNote
+     */
+    select?: JobNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobNote
+     */
+    omit?: JobNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobNoteInclude<ExtArgs> | null
+    /**
+     * Filter, which JobNote to fetch.
+     */
+    where: JobNoteWhereUniqueInput
+  }
+
+  /**
+   * JobNote findFirst
+   */
+  export type JobNoteFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobNote
+     */
+    select?: JobNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobNote
+     */
+    omit?: JobNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobNoteInclude<ExtArgs> | null
+    /**
+     * Filter, which JobNote to fetch.
+     */
+    where?: JobNoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JobNotes to fetch.
+     */
+    orderBy?: JobNoteOrderByWithRelationInput | JobNoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for JobNotes.
+     */
+    cursor?: JobNoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JobNotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JobNotes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of JobNotes.
+     */
+    distinct?: JobNoteScalarFieldEnum | JobNoteScalarFieldEnum[]
+  }
+
+  /**
+   * JobNote findFirstOrThrow
+   */
+  export type JobNoteFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobNote
+     */
+    select?: JobNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobNote
+     */
+    omit?: JobNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobNoteInclude<ExtArgs> | null
+    /**
+     * Filter, which JobNote to fetch.
+     */
+    where?: JobNoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JobNotes to fetch.
+     */
+    orderBy?: JobNoteOrderByWithRelationInput | JobNoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for JobNotes.
+     */
+    cursor?: JobNoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JobNotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JobNotes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of JobNotes.
+     */
+    distinct?: JobNoteScalarFieldEnum | JobNoteScalarFieldEnum[]
+  }
+
+  /**
+   * JobNote findMany
+   */
+  export type JobNoteFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobNote
+     */
+    select?: JobNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobNote
+     */
+    omit?: JobNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobNoteInclude<ExtArgs> | null
+    /**
+     * Filter, which JobNotes to fetch.
+     */
+    where?: JobNoteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of JobNotes to fetch.
+     */
+    orderBy?: JobNoteOrderByWithRelationInput | JobNoteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing JobNotes.
+     */
+    cursor?: JobNoteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` JobNotes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` JobNotes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of JobNotes.
+     */
+    distinct?: JobNoteScalarFieldEnum | JobNoteScalarFieldEnum[]
+  }
+
+  /**
+   * JobNote create
+   */
+  export type JobNoteCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobNote
+     */
+    select?: JobNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobNote
+     */
+    omit?: JobNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobNoteInclude<ExtArgs> | null
+    /**
+     * The data needed to create a JobNote.
+     */
+    data: XOR<JobNoteCreateInput, JobNoteUncheckedCreateInput>
+  }
+
+  /**
+   * JobNote createMany
+   */
+  export type JobNoteCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many JobNotes.
+     */
+    data: JobNoteCreateManyInput | JobNoteCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * JobNote createManyAndReturn
+   */
+  export type JobNoteCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobNote
+     */
+    select?: JobNoteSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobNote
+     */
+    omit?: JobNoteOmit<ExtArgs> | null
+    /**
+     * The data used to create many JobNotes.
+     */
+    data: JobNoteCreateManyInput | JobNoteCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobNoteIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * JobNote update
+   */
+  export type JobNoteUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobNote
+     */
+    select?: JobNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobNote
+     */
+    omit?: JobNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobNoteInclude<ExtArgs> | null
+    /**
+     * The data needed to update a JobNote.
+     */
+    data: XOR<JobNoteUpdateInput, JobNoteUncheckedUpdateInput>
+    /**
+     * Choose, which JobNote to update.
+     */
+    where: JobNoteWhereUniqueInput
+  }
+
+  /**
+   * JobNote updateMany
+   */
+  export type JobNoteUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update JobNotes.
+     */
+    data: XOR<JobNoteUpdateManyMutationInput, JobNoteUncheckedUpdateManyInput>
+    /**
+     * Filter which JobNotes to update
+     */
+    where?: JobNoteWhereInput
+    /**
+     * Limit how many JobNotes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * JobNote updateManyAndReturn
+   */
+  export type JobNoteUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobNote
+     */
+    select?: JobNoteSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobNote
+     */
+    omit?: JobNoteOmit<ExtArgs> | null
+    /**
+     * The data used to update JobNotes.
+     */
+    data: XOR<JobNoteUpdateManyMutationInput, JobNoteUncheckedUpdateManyInput>
+    /**
+     * Filter which JobNotes to update
+     */
+    where?: JobNoteWhereInput
+    /**
+     * Limit how many JobNotes to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobNoteIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * JobNote upsert
+   */
+  export type JobNoteUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobNote
+     */
+    select?: JobNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobNote
+     */
+    omit?: JobNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobNoteInclude<ExtArgs> | null
+    /**
+     * The filter to search for the JobNote to update in case it exists.
+     */
+    where: JobNoteWhereUniqueInput
+    /**
+     * In case the JobNote found by the `where` argument doesn't exist, create a new JobNote with this data.
+     */
+    create: XOR<JobNoteCreateInput, JobNoteUncheckedCreateInput>
+    /**
+     * In case the JobNote was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<JobNoteUpdateInput, JobNoteUncheckedUpdateInput>
+  }
+
+  /**
+   * JobNote delete
+   */
+  export type JobNoteDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobNote
+     */
+    select?: JobNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobNote
+     */
+    omit?: JobNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobNoteInclude<ExtArgs> | null
+    /**
+     * Filter which JobNote to delete.
+     */
+    where: JobNoteWhereUniqueInput
+  }
+
+  /**
+   * JobNote deleteMany
+   */
+  export type JobNoteDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which JobNotes to delete
+     */
+    where?: JobNoteWhereInput
+    /**
+     * Limit how many JobNotes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * JobNote without action
+   */
+  export type JobNoteDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the JobNote
+     */
+    select?: JobNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the JobNote
+     */
+    omit?: JobNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: JobNoteInclude<ExtArgs> | null
   }
 
 
@@ -5670,6 +6975,17 @@ export namespace Prisma {
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+  export const JobNoteScalarFieldEnum: {
+    id: 'id',
+    content: 'content',
+    createdAt: 'createdAt',
+    jobId: 'jobId',
+    adminId: 'adminId'
+  };
+
+  export type JobNoteScalarFieldEnum = (typeof JobNoteScalarFieldEnum)[keyof typeof JobNoteScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -5847,6 +7163,7 @@ export namespace Prisma {
     customerId?: StringFilter<"Job"> | string
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     files?: FileUploadListRelationFilter
+    notes?: JobNoteListRelationFilter
   }
 
   export type JobOrderByWithRelationInput = {
@@ -5864,6 +7181,7 @@ export namespace Prisma {
     customerId?: SortOrder
     customer?: CustomerOrderByWithRelationInput
     files?: FileUploadOrderByRelationAggregateInput
+    notes?: JobNoteOrderByRelationAggregateInput
   }
 
   export type JobWhereUniqueInput = Prisma.AtLeast<{
@@ -5884,6 +7202,7 @@ export namespace Prisma {
     customerId?: StringFilter<"Job"> | string
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     files?: FileUploadListRelationFilter
+    notes?: JobNoteListRelationFilter
   }, "id" | "trackingCode">
 
   export type JobOrderByWithAggregationInput = {
@@ -5994,6 +7313,7 @@ export namespace Prisma {
     password?: StringFilter<"User"> | string
     role?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
+    notes?: JobNoteListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -6003,6 +7323,7 @@ export namespace Prisma {
     password?: SortOrder
     role?: SortOrder
     createdAt?: SortOrder
+    notes?: JobNoteOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -6015,6 +7336,7 @@ export namespace Prisma {
     password?: StringFilter<"User"> | string
     role?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
+    notes?: JobNoteListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -6039,6 +7361,64 @@ export namespace Prisma {
     password?: StringWithAggregatesFilter<"User"> | string
     role?: StringWithAggregatesFilter<"User"> | string
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+  }
+
+  export type JobNoteWhereInput = {
+    AND?: JobNoteWhereInput | JobNoteWhereInput[]
+    OR?: JobNoteWhereInput[]
+    NOT?: JobNoteWhereInput | JobNoteWhereInput[]
+    id?: StringFilter<"JobNote"> | string
+    content?: StringFilter<"JobNote"> | string
+    createdAt?: DateTimeFilter<"JobNote"> | Date | string
+    jobId?: StringFilter<"JobNote"> | string
+    adminId?: StringFilter<"JobNote"> | string
+    job?: XOR<JobScalarRelationFilter, JobWhereInput>
+    admin?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type JobNoteOrderByWithRelationInput = {
+    id?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    jobId?: SortOrder
+    adminId?: SortOrder
+    job?: JobOrderByWithRelationInput
+    admin?: UserOrderByWithRelationInput
+  }
+
+  export type JobNoteWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: JobNoteWhereInput | JobNoteWhereInput[]
+    OR?: JobNoteWhereInput[]
+    NOT?: JobNoteWhereInput | JobNoteWhereInput[]
+    content?: StringFilter<"JobNote"> | string
+    createdAt?: DateTimeFilter<"JobNote"> | Date | string
+    jobId?: StringFilter<"JobNote"> | string
+    adminId?: StringFilter<"JobNote"> | string
+    job?: XOR<JobScalarRelationFilter, JobWhereInput>
+    admin?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type JobNoteOrderByWithAggregationInput = {
+    id?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    jobId?: SortOrder
+    adminId?: SortOrder
+    _count?: JobNoteCountOrderByAggregateInput
+    _max?: JobNoteMaxOrderByAggregateInput
+    _min?: JobNoteMinOrderByAggregateInput
+  }
+
+  export type JobNoteScalarWhereWithAggregatesInput = {
+    AND?: JobNoteScalarWhereWithAggregatesInput | JobNoteScalarWhereWithAggregatesInput[]
+    OR?: JobNoteScalarWhereWithAggregatesInput[]
+    NOT?: JobNoteScalarWhereWithAggregatesInput | JobNoteScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"JobNote"> | string
+    content?: StringWithAggregatesFilter<"JobNote"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"JobNote"> | Date | string
+    jobId?: StringWithAggregatesFilter<"JobNote"> | string
+    adminId?: StringWithAggregatesFilter<"JobNote"> | string
   }
 
   export type CustomerCreateInput = {
@@ -6115,6 +7495,7 @@ export namespace Prisma {
     estimatedPrice?: number | null
     customer: CustomerCreateNestedOneWithoutJobsInput
     files?: FileUploadCreateNestedManyWithoutJobInput
+    notes?: JobNoteCreateNestedManyWithoutJobInput
   }
 
   export type JobUncheckedCreateInput = {
@@ -6131,6 +7512,7 @@ export namespace Prisma {
     estimatedPrice?: number | null
     customerId: string
     files?: FileUploadUncheckedCreateNestedManyWithoutJobInput
+    notes?: JobNoteUncheckedCreateNestedManyWithoutJobInput
   }
 
   export type JobUpdateInput = {
@@ -6147,6 +7529,7 @@ export namespace Prisma {
     estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     customer?: CustomerUpdateOneRequiredWithoutJobsNestedInput
     files?: FileUploadUpdateManyWithoutJobNestedInput
+    notes?: JobNoteUpdateManyWithoutJobNestedInput
   }
 
   export type JobUncheckedUpdateInput = {
@@ -6163,6 +7546,7 @@ export namespace Prisma {
     estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     customerId?: StringFieldUpdateOperationsInput | string
     files?: FileUploadUncheckedUpdateManyWithoutJobNestedInput
+    notes?: JobNoteUncheckedUpdateManyWithoutJobNestedInput
   }
 
   export type JobCreateManyInput = {
@@ -6278,6 +7662,7 @@ export namespace Prisma {
     password: string
     role?: string
     createdAt?: Date | string
+    notes?: JobNoteCreateNestedManyWithoutAdminInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -6287,6 +7672,7 @@ export namespace Prisma {
     password: string
     role?: string
     createdAt?: Date | string
+    notes?: JobNoteUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type UserUpdateInput = {
@@ -6296,6 +7682,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notes?: JobNoteUpdateManyWithoutAdminNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -6305,6 +7692,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notes?: JobNoteUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -6332,6 +7720,60 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type JobNoteCreateInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    job: JobCreateNestedOneWithoutNotesInput
+    admin: UserCreateNestedOneWithoutNotesInput
+  }
+
+  export type JobNoteUncheckedCreateInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    jobId: string
+    adminId: string
+  }
+
+  export type JobNoteUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    job?: JobUpdateOneRequiredWithoutNotesNestedInput
+    admin?: UserUpdateOneRequiredWithoutNotesNestedInput
+  }
+
+  export type JobNoteUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    jobId?: StringFieldUpdateOperationsInput | string
+    adminId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type JobNoteCreateManyInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    jobId: string
+    adminId: string
+  }
+
+  export type JobNoteUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type JobNoteUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    jobId?: StringFieldUpdateOperationsInput | string
+    adminId?: StringFieldUpdateOperationsInput | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -6504,7 +7946,17 @@ export namespace Prisma {
     none?: FileUploadWhereInput
   }
 
+  export type JobNoteListRelationFilter = {
+    every?: JobNoteWhereInput
+    some?: JobNoteWhereInput
+    none?: JobNoteWhereInput
+  }
+
   export type FileUploadOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type JobNoteOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -6664,6 +8116,35 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type JobNoteCountOrderByAggregateInput = {
+    id?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    jobId?: SortOrder
+    adminId?: SortOrder
+  }
+
+  export type JobNoteMaxOrderByAggregateInput = {
+    id?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    jobId?: SortOrder
+    adminId?: SortOrder
+  }
+
+  export type JobNoteMinOrderByAggregateInput = {
+    id?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    jobId?: SortOrder
+    adminId?: SortOrder
+  }
+
   export type JobCreateNestedManyWithoutCustomerInput = {
     create?: XOR<JobCreateWithoutCustomerInput, JobUncheckedCreateWithoutCustomerInput> | JobCreateWithoutCustomerInput[] | JobUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: JobCreateOrConnectWithoutCustomerInput | JobCreateOrConnectWithoutCustomerInput[]
@@ -6731,11 +8212,25 @@ export namespace Prisma {
     connect?: FileUploadWhereUniqueInput | FileUploadWhereUniqueInput[]
   }
 
+  export type JobNoteCreateNestedManyWithoutJobInput = {
+    create?: XOR<JobNoteCreateWithoutJobInput, JobNoteUncheckedCreateWithoutJobInput> | JobNoteCreateWithoutJobInput[] | JobNoteUncheckedCreateWithoutJobInput[]
+    connectOrCreate?: JobNoteCreateOrConnectWithoutJobInput | JobNoteCreateOrConnectWithoutJobInput[]
+    createMany?: JobNoteCreateManyJobInputEnvelope
+    connect?: JobNoteWhereUniqueInput | JobNoteWhereUniqueInput[]
+  }
+
   export type FileUploadUncheckedCreateNestedManyWithoutJobInput = {
     create?: XOR<FileUploadCreateWithoutJobInput, FileUploadUncheckedCreateWithoutJobInput> | FileUploadCreateWithoutJobInput[] | FileUploadUncheckedCreateWithoutJobInput[]
     connectOrCreate?: FileUploadCreateOrConnectWithoutJobInput | FileUploadCreateOrConnectWithoutJobInput[]
     createMany?: FileUploadCreateManyJobInputEnvelope
     connect?: FileUploadWhereUniqueInput | FileUploadWhereUniqueInput[]
+  }
+
+  export type JobNoteUncheckedCreateNestedManyWithoutJobInput = {
+    create?: XOR<JobNoteCreateWithoutJobInput, JobNoteUncheckedCreateWithoutJobInput> | JobNoteCreateWithoutJobInput[] | JobNoteUncheckedCreateWithoutJobInput[]
+    connectOrCreate?: JobNoteCreateOrConnectWithoutJobInput | JobNoteCreateOrConnectWithoutJobInput[]
+    createMany?: JobNoteCreateManyJobInputEnvelope
+    connect?: JobNoteWhereUniqueInput | JobNoteWhereUniqueInput[]
   }
 
   export type EnumJobStatusFieldUpdateOperationsInput = {
@@ -6780,6 +8275,20 @@ export namespace Prisma {
     deleteMany?: FileUploadScalarWhereInput | FileUploadScalarWhereInput[]
   }
 
+  export type JobNoteUpdateManyWithoutJobNestedInput = {
+    create?: XOR<JobNoteCreateWithoutJobInput, JobNoteUncheckedCreateWithoutJobInput> | JobNoteCreateWithoutJobInput[] | JobNoteUncheckedCreateWithoutJobInput[]
+    connectOrCreate?: JobNoteCreateOrConnectWithoutJobInput | JobNoteCreateOrConnectWithoutJobInput[]
+    upsert?: JobNoteUpsertWithWhereUniqueWithoutJobInput | JobNoteUpsertWithWhereUniqueWithoutJobInput[]
+    createMany?: JobNoteCreateManyJobInputEnvelope
+    set?: JobNoteWhereUniqueInput | JobNoteWhereUniqueInput[]
+    disconnect?: JobNoteWhereUniqueInput | JobNoteWhereUniqueInput[]
+    delete?: JobNoteWhereUniqueInput | JobNoteWhereUniqueInput[]
+    connect?: JobNoteWhereUniqueInput | JobNoteWhereUniqueInput[]
+    update?: JobNoteUpdateWithWhereUniqueWithoutJobInput | JobNoteUpdateWithWhereUniqueWithoutJobInput[]
+    updateMany?: JobNoteUpdateManyWithWhereWithoutJobInput | JobNoteUpdateManyWithWhereWithoutJobInput[]
+    deleteMany?: JobNoteScalarWhereInput | JobNoteScalarWhereInput[]
+  }
+
   export type FileUploadUncheckedUpdateManyWithoutJobNestedInput = {
     create?: XOR<FileUploadCreateWithoutJobInput, FileUploadUncheckedCreateWithoutJobInput> | FileUploadCreateWithoutJobInput[] | FileUploadUncheckedCreateWithoutJobInput[]
     connectOrCreate?: FileUploadCreateOrConnectWithoutJobInput | FileUploadCreateOrConnectWithoutJobInput[]
@@ -6794,6 +8303,20 @@ export namespace Prisma {
     deleteMany?: FileUploadScalarWhereInput | FileUploadScalarWhereInput[]
   }
 
+  export type JobNoteUncheckedUpdateManyWithoutJobNestedInput = {
+    create?: XOR<JobNoteCreateWithoutJobInput, JobNoteUncheckedCreateWithoutJobInput> | JobNoteCreateWithoutJobInput[] | JobNoteUncheckedCreateWithoutJobInput[]
+    connectOrCreate?: JobNoteCreateOrConnectWithoutJobInput | JobNoteCreateOrConnectWithoutJobInput[]
+    upsert?: JobNoteUpsertWithWhereUniqueWithoutJobInput | JobNoteUpsertWithWhereUniqueWithoutJobInput[]
+    createMany?: JobNoteCreateManyJobInputEnvelope
+    set?: JobNoteWhereUniqueInput | JobNoteWhereUniqueInput[]
+    disconnect?: JobNoteWhereUniqueInput | JobNoteWhereUniqueInput[]
+    delete?: JobNoteWhereUniqueInput | JobNoteWhereUniqueInput[]
+    connect?: JobNoteWhereUniqueInput | JobNoteWhereUniqueInput[]
+    update?: JobNoteUpdateWithWhereUniqueWithoutJobInput | JobNoteUpdateWithWhereUniqueWithoutJobInput[]
+    updateMany?: JobNoteUpdateManyWithWhereWithoutJobInput | JobNoteUpdateManyWithWhereWithoutJobInput[]
+    deleteMany?: JobNoteScalarWhereInput | JobNoteScalarWhereInput[]
+  }
+
   export type JobCreateNestedOneWithoutFilesInput = {
     create?: XOR<JobCreateWithoutFilesInput, JobUncheckedCreateWithoutFilesInput>
     connectOrCreate?: JobCreateOrConnectWithoutFilesInput
@@ -6806,6 +8329,76 @@ export namespace Prisma {
     upsert?: JobUpsertWithoutFilesInput
     connect?: JobWhereUniqueInput
     update?: XOR<XOR<JobUpdateToOneWithWhereWithoutFilesInput, JobUpdateWithoutFilesInput>, JobUncheckedUpdateWithoutFilesInput>
+  }
+
+  export type JobNoteCreateNestedManyWithoutAdminInput = {
+    create?: XOR<JobNoteCreateWithoutAdminInput, JobNoteUncheckedCreateWithoutAdminInput> | JobNoteCreateWithoutAdminInput[] | JobNoteUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: JobNoteCreateOrConnectWithoutAdminInput | JobNoteCreateOrConnectWithoutAdminInput[]
+    createMany?: JobNoteCreateManyAdminInputEnvelope
+    connect?: JobNoteWhereUniqueInput | JobNoteWhereUniqueInput[]
+  }
+
+  export type JobNoteUncheckedCreateNestedManyWithoutAdminInput = {
+    create?: XOR<JobNoteCreateWithoutAdminInput, JobNoteUncheckedCreateWithoutAdminInput> | JobNoteCreateWithoutAdminInput[] | JobNoteUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: JobNoteCreateOrConnectWithoutAdminInput | JobNoteCreateOrConnectWithoutAdminInput[]
+    createMany?: JobNoteCreateManyAdminInputEnvelope
+    connect?: JobNoteWhereUniqueInput | JobNoteWhereUniqueInput[]
+  }
+
+  export type JobNoteUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<JobNoteCreateWithoutAdminInput, JobNoteUncheckedCreateWithoutAdminInput> | JobNoteCreateWithoutAdminInput[] | JobNoteUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: JobNoteCreateOrConnectWithoutAdminInput | JobNoteCreateOrConnectWithoutAdminInput[]
+    upsert?: JobNoteUpsertWithWhereUniqueWithoutAdminInput | JobNoteUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: JobNoteCreateManyAdminInputEnvelope
+    set?: JobNoteWhereUniqueInput | JobNoteWhereUniqueInput[]
+    disconnect?: JobNoteWhereUniqueInput | JobNoteWhereUniqueInput[]
+    delete?: JobNoteWhereUniqueInput | JobNoteWhereUniqueInput[]
+    connect?: JobNoteWhereUniqueInput | JobNoteWhereUniqueInput[]
+    update?: JobNoteUpdateWithWhereUniqueWithoutAdminInput | JobNoteUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: JobNoteUpdateManyWithWhereWithoutAdminInput | JobNoteUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: JobNoteScalarWhereInput | JobNoteScalarWhereInput[]
+  }
+
+  export type JobNoteUncheckedUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<JobNoteCreateWithoutAdminInput, JobNoteUncheckedCreateWithoutAdminInput> | JobNoteCreateWithoutAdminInput[] | JobNoteUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: JobNoteCreateOrConnectWithoutAdminInput | JobNoteCreateOrConnectWithoutAdminInput[]
+    upsert?: JobNoteUpsertWithWhereUniqueWithoutAdminInput | JobNoteUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: JobNoteCreateManyAdminInputEnvelope
+    set?: JobNoteWhereUniqueInput | JobNoteWhereUniqueInput[]
+    disconnect?: JobNoteWhereUniqueInput | JobNoteWhereUniqueInput[]
+    delete?: JobNoteWhereUniqueInput | JobNoteWhereUniqueInput[]
+    connect?: JobNoteWhereUniqueInput | JobNoteWhereUniqueInput[]
+    update?: JobNoteUpdateWithWhereUniqueWithoutAdminInput | JobNoteUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: JobNoteUpdateManyWithWhereWithoutAdminInput | JobNoteUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: JobNoteScalarWhereInput | JobNoteScalarWhereInput[]
+  }
+
+  export type JobCreateNestedOneWithoutNotesInput = {
+    create?: XOR<JobCreateWithoutNotesInput, JobUncheckedCreateWithoutNotesInput>
+    connectOrCreate?: JobCreateOrConnectWithoutNotesInput
+    connect?: JobWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutNotesInput = {
+    create?: XOR<UserCreateWithoutNotesInput, UserUncheckedCreateWithoutNotesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutNotesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type JobUpdateOneRequiredWithoutNotesNestedInput = {
+    create?: XOR<JobCreateWithoutNotesInput, JobUncheckedCreateWithoutNotesInput>
+    connectOrCreate?: JobCreateOrConnectWithoutNotesInput
+    upsert?: JobUpsertWithoutNotesInput
+    connect?: JobWhereUniqueInput
+    update?: XOR<XOR<JobUpdateToOneWithWhereWithoutNotesInput, JobUpdateWithoutNotesInput>, JobUncheckedUpdateWithoutNotesInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutNotesNestedInput = {
+    create?: XOR<UserCreateWithoutNotesInput, UserUncheckedCreateWithoutNotesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutNotesInput
+    upsert?: UserUpsertWithoutNotesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutNotesInput, UserUpdateWithoutNotesInput>, UserUncheckedUpdateWithoutNotesInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -6990,6 +8583,7 @@ export namespace Prisma {
     finishing?: string | null
     estimatedPrice?: number | null
     files?: FileUploadCreateNestedManyWithoutJobInput
+    notes?: JobNoteCreateNestedManyWithoutJobInput
   }
 
   export type JobUncheckedCreateWithoutCustomerInput = {
@@ -7005,6 +8599,7 @@ export namespace Prisma {
     finishing?: string | null
     estimatedPrice?: number | null
     files?: FileUploadUncheckedCreateNestedManyWithoutJobInput
+    notes?: JobNoteUncheckedCreateNestedManyWithoutJobInput
   }
 
   export type JobCreateOrConnectWithoutCustomerInput = {
@@ -7098,6 +8693,30 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type JobNoteCreateWithoutJobInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    admin: UserCreateNestedOneWithoutNotesInput
+  }
+
+  export type JobNoteUncheckedCreateWithoutJobInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    adminId: string
+  }
+
+  export type JobNoteCreateOrConnectWithoutJobInput = {
+    where: JobNoteWhereUniqueInput
+    create: XOR<JobNoteCreateWithoutJobInput, JobNoteUncheckedCreateWithoutJobInput>
+  }
+
+  export type JobNoteCreateManyJobInputEnvelope = {
+    data: JobNoteCreateManyJobInput | JobNoteCreateManyJobInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CustomerUpsertWithoutJobsInput = {
     update: XOR<CustomerUpdateWithoutJobsInput, CustomerUncheckedUpdateWithoutJobsInput>
     create: XOR<CustomerCreateWithoutJobsInput, CustomerUncheckedCreateWithoutJobsInput>
@@ -7153,6 +8772,33 @@ export namespace Prisma {
     jobId?: StringFilter<"FileUpload"> | string
   }
 
+  export type JobNoteUpsertWithWhereUniqueWithoutJobInput = {
+    where: JobNoteWhereUniqueInput
+    update: XOR<JobNoteUpdateWithoutJobInput, JobNoteUncheckedUpdateWithoutJobInput>
+    create: XOR<JobNoteCreateWithoutJobInput, JobNoteUncheckedCreateWithoutJobInput>
+  }
+
+  export type JobNoteUpdateWithWhereUniqueWithoutJobInput = {
+    where: JobNoteWhereUniqueInput
+    data: XOR<JobNoteUpdateWithoutJobInput, JobNoteUncheckedUpdateWithoutJobInput>
+  }
+
+  export type JobNoteUpdateManyWithWhereWithoutJobInput = {
+    where: JobNoteScalarWhereInput
+    data: XOR<JobNoteUpdateManyMutationInput, JobNoteUncheckedUpdateManyWithoutJobInput>
+  }
+
+  export type JobNoteScalarWhereInput = {
+    AND?: JobNoteScalarWhereInput | JobNoteScalarWhereInput[]
+    OR?: JobNoteScalarWhereInput[]
+    NOT?: JobNoteScalarWhereInput | JobNoteScalarWhereInput[]
+    id?: StringFilter<"JobNote"> | string
+    content?: StringFilter<"JobNote"> | string
+    createdAt?: DateTimeFilter<"JobNote"> | Date | string
+    jobId?: StringFilter<"JobNote"> | string
+    adminId?: StringFilter<"JobNote"> | string
+  }
+
   export type JobCreateWithoutFilesInput = {
     id?: string
     description: string
@@ -7166,6 +8812,7 @@ export namespace Prisma {
     finishing?: string | null
     estimatedPrice?: number | null
     customer: CustomerCreateNestedOneWithoutJobsInput
+    notes?: JobNoteCreateNestedManyWithoutJobInput
   }
 
   export type JobUncheckedCreateWithoutFilesInput = {
@@ -7181,6 +8828,7 @@ export namespace Prisma {
     finishing?: string | null
     estimatedPrice?: number | null
     customerId: string
+    notes?: JobNoteUncheckedCreateNestedManyWithoutJobInput
   }
 
   export type JobCreateOrConnectWithoutFilesInput = {
@@ -7212,6 +8860,7 @@ export namespace Prisma {
     finishing?: NullableStringFieldUpdateOperationsInput | string | null
     estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     customer?: CustomerUpdateOneRequiredWithoutJobsNestedInput
+    notes?: JobNoteUpdateManyWithoutJobNestedInput
   }
 
   export type JobUncheckedUpdateWithoutFilesInput = {
@@ -7227,6 +8876,179 @@ export namespace Prisma {
     finishing?: NullableStringFieldUpdateOperationsInput | string | null
     estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     customerId?: StringFieldUpdateOperationsInput | string
+    notes?: JobNoteUncheckedUpdateManyWithoutJobNestedInput
+  }
+
+  export type JobNoteCreateWithoutAdminInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    job: JobCreateNestedOneWithoutNotesInput
+  }
+
+  export type JobNoteUncheckedCreateWithoutAdminInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    jobId: string
+  }
+
+  export type JobNoteCreateOrConnectWithoutAdminInput = {
+    where: JobNoteWhereUniqueInput
+    create: XOR<JobNoteCreateWithoutAdminInput, JobNoteUncheckedCreateWithoutAdminInput>
+  }
+
+  export type JobNoteCreateManyAdminInputEnvelope = {
+    data: JobNoteCreateManyAdminInput | JobNoteCreateManyAdminInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type JobNoteUpsertWithWhereUniqueWithoutAdminInput = {
+    where: JobNoteWhereUniqueInput
+    update: XOR<JobNoteUpdateWithoutAdminInput, JobNoteUncheckedUpdateWithoutAdminInput>
+    create: XOR<JobNoteCreateWithoutAdminInput, JobNoteUncheckedCreateWithoutAdminInput>
+  }
+
+  export type JobNoteUpdateWithWhereUniqueWithoutAdminInput = {
+    where: JobNoteWhereUniqueInput
+    data: XOR<JobNoteUpdateWithoutAdminInput, JobNoteUncheckedUpdateWithoutAdminInput>
+  }
+
+  export type JobNoteUpdateManyWithWhereWithoutAdminInput = {
+    where: JobNoteScalarWhereInput
+    data: XOR<JobNoteUpdateManyMutationInput, JobNoteUncheckedUpdateManyWithoutAdminInput>
+  }
+
+  export type JobCreateWithoutNotesInput = {
+    id?: string
+    description: string
+    status?: $Enums.JobStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    trackingCode?: string | null
+    paperSize?: string | null
+    quantity?: number | null
+    printType?: string | null
+    finishing?: string | null
+    estimatedPrice?: number | null
+    customer: CustomerCreateNestedOneWithoutJobsInput
+    files?: FileUploadCreateNestedManyWithoutJobInput
+  }
+
+  export type JobUncheckedCreateWithoutNotesInput = {
+    id?: string
+    description: string
+    status?: $Enums.JobStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    trackingCode?: string | null
+    paperSize?: string | null
+    quantity?: number | null
+    printType?: string | null
+    finishing?: string | null
+    estimatedPrice?: number | null
+    customerId: string
+    files?: FileUploadUncheckedCreateNestedManyWithoutJobInput
+  }
+
+  export type JobCreateOrConnectWithoutNotesInput = {
+    where: JobWhereUniqueInput
+    create: XOR<JobCreateWithoutNotesInput, JobUncheckedCreateWithoutNotesInput>
+  }
+
+  export type UserCreateWithoutNotesInput = {
+    id?: string
+    name?: string | null
+    email: string
+    password: string
+    role?: string
+    createdAt?: Date | string
+  }
+
+  export type UserUncheckedCreateWithoutNotesInput = {
+    id?: string
+    name?: string | null
+    email: string
+    password: string
+    role?: string
+    createdAt?: Date | string
+  }
+
+  export type UserCreateOrConnectWithoutNotesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutNotesInput, UserUncheckedCreateWithoutNotesInput>
+  }
+
+  export type JobUpsertWithoutNotesInput = {
+    update: XOR<JobUpdateWithoutNotesInput, JobUncheckedUpdateWithoutNotesInput>
+    create: XOR<JobCreateWithoutNotesInput, JobUncheckedCreateWithoutNotesInput>
+    where?: JobWhereInput
+  }
+
+  export type JobUpdateToOneWithWhereWithoutNotesInput = {
+    where?: JobWhereInput
+    data: XOR<JobUpdateWithoutNotesInput, JobUncheckedUpdateWithoutNotesInput>
+  }
+
+  export type JobUpdateWithoutNotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paperSize?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    printType?: NullableStringFieldUpdateOperationsInput | string | null
+    finishing?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    customer?: CustomerUpdateOneRequiredWithoutJobsNestedInput
+    files?: FileUploadUpdateManyWithoutJobNestedInput
+  }
+
+  export type JobUncheckedUpdateWithoutNotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    status?: EnumJobStatusFieldUpdateOperationsInput | $Enums.JobStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    trackingCode?: NullableStringFieldUpdateOperationsInput | string | null
+    paperSize?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    printType?: NullableStringFieldUpdateOperationsInput | string | null
+    finishing?: NullableStringFieldUpdateOperationsInput | string | null
+    estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
+    customerId?: StringFieldUpdateOperationsInput | string
+    files?: FileUploadUncheckedUpdateManyWithoutJobNestedInput
+  }
+
+  export type UserUpsertWithoutNotesInput = {
+    update: XOR<UserUpdateWithoutNotesInput, UserUncheckedUpdateWithoutNotesInput>
+    create: XOR<UserCreateWithoutNotesInput, UserUncheckedCreateWithoutNotesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutNotesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutNotesInput, UserUncheckedUpdateWithoutNotesInput>
+  }
+
+  export type UserUpdateWithoutNotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUncheckedUpdateWithoutNotesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type JobCreateManyCustomerInput = {
@@ -7256,6 +9078,7 @@ export namespace Prisma {
     finishing?: NullableStringFieldUpdateOperationsInput | string | null
     estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     files?: FileUploadUpdateManyWithoutJobNestedInput
+    notes?: JobNoteUpdateManyWithoutJobNestedInput
   }
 
   export type JobUncheckedUpdateWithoutCustomerInput = {
@@ -7271,6 +9094,7 @@ export namespace Prisma {
     finishing?: NullableStringFieldUpdateOperationsInput | string | null
     estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     files?: FileUploadUncheckedUpdateManyWithoutJobNestedInput
+    notes?: JobNoteUncheckedUpdateManyWithoutJobNestedInput
   }
 
   export type JobUncheckedUpdateManyWithoutCustomerInput = {
@@ -7295,6 +9119,13 @@ export namespace Prisma {
     uploadedAt?: Date | string
   }
 
+  export type JobNoteCreateManyJobInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    adminId: string
+  }
+
   export type FileUploadUpdateWithoutJobInput = {
     id?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
@@ -7317,6 +9148,55 @@ export namespace Prisma {
     originalName?: StringFieldUpdateOperationsInput | string
     fileType?: StringFieldUpdateOperationsInput | string
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type JobNoteUpdateWithoutJobInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    admin?: UserUpdateOneRequiredWithoutNotesNestedInput
+  }
+
+  export type JobNoteUncheckedUpdateWithoutJobInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adminId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type JobNoteUncheckedUpdateManyWithoutJobInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adminId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type JobNoteCreateManyAdminInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    jobId: string
+  }
+
+  export type JobNoteUpdateWithoutAdminInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    job?: JobUpdateOneRequiredWithoutNotesNestedInput
+  }
+
+  export type JobNoteUncheckedUpdateWithoutAdminInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    jobId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type JobNoteUncheckedUpdateManyWithoutAdminInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    jobId?: StringFieldUpdateOperationsInput | string
   }
 
 

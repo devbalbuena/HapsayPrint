@@ -128,3 +128,31 @@ export async function submitPrintJob(data: SubmitPrintJobData) {
     return { success: false, error: "Failed to save submission. Please try again." };
   }
 }
+
+export async function addJobNote(jobId: string, content: string) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { success: false, error: "Unauthorized. Please log in." };
+  }
+
+  if (!content.trim()) {
+    return { success: false, error: "Note content cannot be empty." };
+  }
+
+  try {
+    const newNote = await prisma.jobNote.create({
+      data: {
+        content: content.trim(),
+        jobId,
+        adminId: session.user.id,
+      },
+      include: { admin: true },
+    });
+
+    revalidatePath("/admin");
+    return { success: true, note: newNote };
+  } catch (error) {
+    console.error("Failed to add job note:", error);
+    return { success: false, error: "Failed to add note. Please try again." };
+  }
+}

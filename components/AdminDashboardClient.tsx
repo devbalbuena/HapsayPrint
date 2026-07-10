@@ -22,6 +22,7 @@ import { SearchIcon, FileTextIcon, ExternalLinkIcon, InboxIcon, ListFilterIcon }
 import { toast } from "sonner";
 import { updateJobStatus } from "@/app/actions";
 import { cn } from "@/lib/utils";
+import { JobNotesModal } from "./JobNotesModal";
 
 type FileUpload = {
   id: string;
@@ -50,6 +51,12 @@ type Job = {
   estimatedPrice: number | null;
   customer: Customer;
   files: FileUpload[];
+  notes: {
+    id: string;
+    content: string;
+    createdAt: Date;
+    admin: { name: string | null; email: string };
+  }[];
 };
 
 type Props = {
@@ -279,8 +286,9 @@ export function AdminDashboardClient({ jobs }: Props) {
                       <span className="text-xs text-zinc-400 font-medium">—</span>
                     )}
                   </TableCell>
-                  <TableCell className="align-top pt-3.5">
+                  <TableCell className="align-top pt-3.5 space-y-2">
                     <StatusSelect job={job} />
+                    <JobNotesModal jobId={job.id} initialNotes={job.notes} />
                   </TableCell>
                   <TableCell className="align-top pt-4">
                     <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
@@ -307,7 +315,10 @@ export function AdminDashboardClient({ jobs }: Props) {
                   <p className="font-semibold text-zinc-900 dark:text-zinc-100">{job.customer.name}</p>
                   <p className="text-zinc-500 font-mono text-xs mt-0.5">{job.customer.contact}</p>
                 </div>
-                <StatusSelect job={job} />
+                <div className="flex flex-col items-end gap-2">
+                  <StatusSelect job={job} />
+                  <JobNotesModal jobId={job.id} initialNotes={job.notes} />
+                </div>
               </div>
               
               <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded-xl p-3 border border-zinc-100 dark:border-zinc-800">
