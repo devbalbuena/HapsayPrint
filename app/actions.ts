@@ -156,3 +156,24 @@ export async function addJobNote(jobId: string, content: string) {
     return { success: false, error: "Failed to add note. Please try again." };
   }
 }
+
+export async function toggleArchiveJob(jobId: string, archive: boolean) {
+  const session = await auth();
+  if (!session) {
+    return { success: false, error: "Unauthorized. Please log in." };
+  }
+
+  try {
+    await prisma.job.update({
+      where: { id: jobId },
+      data: { archived: archive },
+    });
+
+    revalidatePath("/admin");
+    revalidatePath("/admin/archive");
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to archive job:", error);
+    return { success: false, error: "Failed to update job. Please try again." };
+  }
+}

@@ -18,9 +18,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SearchIcon, FileTextIcon, ExternalLinkIcon, InboxIcon, ListFilterIcon } from "lucide-react";
+import { SearchIcon, FileTextIcon, ExternalLinkIcon, InboxIcon, ListFilterIcon, ArchiveIcon, ArchiveRestoreIcon } from "lucide-react";
 import { toast } from "sonner";
-import { updateJobStatus } from "@/app/actions";
+import { updateJobStatus, toggleArchiveJob } from "@/app/actions";
 import { cn } from "@/lib/utils";
 import { JobNotesModal } from "./JobNotesModal";
 
@@ -61,6 +61,7 @@ type Job = {
 
 type Props = {
   jobs: Job[];
+  isArchiveView?: boolean;
 };
 
 const STATUS_LABELS: Record<Job["status"], string> = {
@@ -174,7 +175,45 @@ function StatusSelect({ job }: { job: Job }) {
   );
 }
 
-export function AdminDashboardClient({ jobs }: Props) {
+function ArchiveButton({ jobId, isArchiveView }: { jobId: string; isArchiveView: boolean }) {
+  const [isPending, startTransition] = useTransition();
+
+  function handleClick() {
+    startTransition(async () => {
+      const result = await toggleArchiveJob(jobId, !isArchiveView);
+      if (!result.success) {
+        toast.error(result.error ?? "Failed to update job.");
+      } else {
+        toast.success(isArchiveView ? "Job restored to dashboard" : "Job archived");
+      }
+    });
+  }
+
+  return (
+    <button
+      onClick={handleClick}
+      disabled={isPending}
+      title={isArchiveView ? "Restore to dashboard" : "Archive this job"}
+      className={cn(
+        "relative inline-flex items-center gap-1.5 h-8 px-3 text-xs font-medium rounded-md border transition-colors disabled:opacity-50 disabled:cursor-wait",
+        isArchiveView
+          ? "border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/30 dark:hover:bg-emerald-900/30 dark:text-emerald-400"
+          : "border-zinc-200 dark:border-zinc-800 bg-white hover:bg-zinc-100 dark:bg-zinc-950 dark:hover:bg-zinc-900 text-zinc-500 dark:text-zinc-400"
+      )}
+    >
+      {isPending ? (
+        <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+      ) : isArchiveView ? (
+        <ArchiveRestoreIcon className="w-3.5 h-3.5" />
+      ) : (
+        <ArchiveIcon className="w-3.5 h-3.5" />
+      )}
+      {isArchiveView ? "Restore" : "Archive"}
+    </button>
+  );
+}
+
+export function AdminDashboardClient({ jobs, isArchiveView = false }: Props) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
 
@@ -240,6 +279,8 @@ export function AdminDashboardClient({ jobs }: Props) {
           <p className="text-sm text-zinc-500 mt-1 max-w-sm">
             {search || statusFilter !== "ALL"
               ? "We couldn't find any jobs matching your current filters."
+              : isArchiveView
+              ? "No archived jobs yet. Archive a job from the main dashboard."
               : "When customers submit print jobs, they will appear here."}
           </p>
         </div>
@@ -288,7 +329,10 @@ export function AdminDashboardClient({ jobs }: Props) {
                   </TableCell>
                   <TableCell className="align-top pt-3.5 space-y-2">
                     <StatusSelect job={job} />
-                    <JobNotesModal jobId={job.id} initialNotes={job.notes} />
+                    <div className="flex flex-wrap gap-1.5">
+                      <JobNotesModal jobId={job.id} initialNotes={job.notes} />
+                      <ArchiveButton jobId={job.id} isArchiveView={isArchiveView} />
+                    </div>
                   </TableCell>
                   <TableCell className="align-top pt-4">
                     <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
@@ -317,7 +361,10 @@ export function AdminDashboardClient({ jobs }: Props) {
                 </div>
                 <div className="flex flex-col items-end gap-2">
                   <StatusSelect job={job} />
-                  <JobNotesModal jobId={job.id} initialNotes={job.notes} />
+                  <div className="flex gap-1.5">
+                    <JobNotesModal jobId={job.id} initialNotes={job.notes} />
+                    <ArchiveButton jobId={job.id} isArchiveView={isArchiveView} />
+                  </div>
                 </div>
               </div>
               

@@ -36,6 +36,7 @@ model Job {
   printType      String?
   finishing      String?
   estimatedPrice Float?
+  archived       Boolean   @default(false)
 
   customerId String
   customer   Customer @relation(fields: [customerId], references: [id])

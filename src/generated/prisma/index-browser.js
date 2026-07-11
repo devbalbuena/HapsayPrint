@@ -140,6 +140,7 @@ exports.Prisma.JobScalarFieldEnum = {
   printType: 'printType',
   finishing: 'finishing',
   estimatedPrice: 'estimatedPrice',
+  archived: 'archived',
   customerId: 'customerId'
 };
 

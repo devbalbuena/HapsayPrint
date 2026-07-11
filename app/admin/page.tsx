@@ -11,9 +11,11 @@ import {
   CalendarDaysIcon,
   CalendarIcon,
   TrendingUpIcon,
+  ArchiveIcon,
 } from "lucide-react";
 import type { Metadata } from "next";
 import React from "react";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | HapsayPrint",
@@ -25,6 +27,7 @@ export const revalidate = 30;
 export default async function AdminPage() {
   const [jobs, analytics] = await Promise.all([
     prisma.job.findMany({
+      where: { archived: false },
       orderBy: { createdAt: "desc" },
       include: {
         customer: true,
@@ -118,9 +121,16 @@ export default async function AdminPage() {
           <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-800" />
           <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider flex items-center gap-2">
             <PrinterIcon className="w-3.5 h-3.5" />
-            All Jobs
+            Active Jobs
           </span>
           <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-800" />
+          <Link
+            href="/admin/archive"
+            className="flex items-center gap-1.5 text-xs font-semibold text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors shrink-0"
+          >
+            <ArchiveIcon className="w-3.5 h-3.5" />
+            View Archive
+          </Link>
         </div>
 
         {/* ── Jobs Table ── */}
