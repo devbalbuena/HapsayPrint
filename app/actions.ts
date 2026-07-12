@@ -177,3 +177,25 @@ export async function toggleArchiveJob(jobId: string, archive: boolean) {
     return { success: false, error: "Failed to update job. Please try again." };
   }
 }
+
+export async function updatePricingConfig(data: Record<string, number>) {
+  const session = await auth();
+  if (!session) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  try {
+    await prisma.pricingConfig.upsert({
+      where: { id: "default" },
+      update: data,
+      create: { id: "default", ...data },
+    });
+    
+    revalidatePath("/");
+    revalidatePath("/admin/settings");
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to update pricing:", error);
+    return { success: false, error: "Failed to save prices" };
+  }
+}

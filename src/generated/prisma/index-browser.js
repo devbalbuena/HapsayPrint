@@ -170,6 +170,22 @@ exports.Prisma.JobNoteScalarFieldEnum = {
   adminId: 'adminId'
 };
 
+exports.Prisma.PricingConfigScalarFieldEnum = {
+  id: 'id',
+  shortBw: 'shortBw',
+  shortCol: 'shortCol',
+  longBw: 'longBw',
+  longCol: 'longCol',
+  a4Bw: 'a4Bw',
+  a4Col: 'a4Col',
+  legalBw: 'legalBw',
+  legalCol: 'legalCol',
+  lamination: 'lamination',
+  bindingComb: 'bindingComb',
+  bindingSpiral: 'bindingSpiral',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -196,7 +212,8 @@ exports.Prisma.ModelName = {
   Job: 'Job',
   FileUpload: 'FileUpload',
   User: 'User',
-  JobNote: 'JobNote'
+  JobNote: 'JobNote',
+  PricingConfig: 'PricingConfig'
 };
 
 /**

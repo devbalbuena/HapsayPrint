@@ -77,3 +77,22 @@ model JobNote {
   adminId String
   admin   User   @relation(fields: [adminId], references: [id])
 }
+
+model PricingConfig {
+  id String @id @default("default")
+
+  shortBw  Float @default(3)
+  shortCol Float @default(8)
+  longBw   Float @default(4)
+  longCol  Float @default(10)
+  a4Bw     Float @default(4)
+  a4Col    Float @default(10)
+  legalBw  Float @default(5)
+  legalCol Float @default(12)
+
+  lamination    Float @default(15)
+  bindingComb   Float @default(50)
+  bindingSpiral Float @default(80)
+
+  updatedAt DateTime @updatedAt
+}

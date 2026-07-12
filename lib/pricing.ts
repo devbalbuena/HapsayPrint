@@ -1,3 +1,6 @@
+import { prisma } from "@/src/db";
+import { PricingConfig } from "@/src/generated/prisma";
+
 export const PAPER_SIZES = [
   { value: "SHORT", label: "Short (8.5x11)" },
   { value: "LONG", label: "Long (8.5x13)" },
@@ -17,23 +20,22 @@ export const FINISHING_OPTIONS = [
   { value: "BINDING_SPIRAL", label: "Binding (Spiral)" },
 ] as const;
 
-// Base prices per page
-export const BASE_PRICES: Record<string, Record<string, number>> = {
-  SHORT: { BW: 3, COLORED: 8 },
-  LONG: { BW: 4, COLORED: 10 },
-  A4: { BW: 4, COLORED: 10 },
-  LEGAL: { BW: 5, COLORED: 12 },
-};
+export async function getPricingConfig() {
+  let config = await prisma.pricingConfig.findUnique({
+    where: { id: "default" },
+  });
 
-// Add-on prices per document (assumes finishing applies per document, but for simplicity here we multiply by quantity)
-export const FINISHING_PRICES: Record<string, number> = {
-  NONE: 0,
-  LAMINATION: 15,
-  BINDING_COMB: 50,
-  BINDING_SPIRAL: 80,
-};
+  if (!config) {
+    config = await prisma.pricingConfig.create({
+      data: { id: "default" },
+    });
+  }
+
+  return config;
+}
 
 export function calculateEstimate(
+  pricingConfig: PricingConfig,
   paperSize: string | null,
   printType: string | null,
   finishing: string | null,
@@ -41,9 +43,26 @@ export function calculateEstimate(
 ): number {
   if (!paperSize || !printType || quantity < 1) return 0;
 
-  const basePrice = BASE_PRICES[paperSize]?.[printType] || 0;
-  const finishingPrice = finishing ? FINISHING_PRICES[finishing] || 0 : 0;
+  let basePrice = 0;
+  
+  if (paperSize === "SHORT") {
+    basePrice = printType === "BW" ? pricingConfig.shortBw : pricingConfig.shortCol;
+  } else if (paperSize === "LONG") {
+    basePrice = printType === "BW" ? pricingConfig.longBw : pricingConfig.longCol;
+  } else if (paperSize === "A4") {
+    basePrice = printType === "BW" ? pricingConfig.a4Bw : pricingConfig.a4Col;
+  } else if (paperSize === "LEGAL") {
+    basePrice = printType === "BW" ? pricingConfig.legalBw : pricingConfig.legalCol;
+  }
 
-  // (Price per page * quantity) + (Finishing price * quantity)
+  let finishingPrice = 0;
+  if (finishing === "LAMINATION") {
+    finishingPrice = pricingConfig.lamination;
+  } else if (finishing === "BINDING_COMB") {
+    finishingPrice = pricingConfig.bindingComb;
+  } else if (finishing === "BINDING_SPIRAL") {
+    finishingPrice = pricingConfig.bindingSpiral;
+  }
+
   return (basePrice * quantity) + (finishingPrice * quantity);
 }

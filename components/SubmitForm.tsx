@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PAPER_SIZES, PRINT_TYPES, FINISHING_OPTIONS, calculateEstimate } from "@/lib/pricing";
+import { PricingConfig } from "@/src/generated/prisma";
 
 interface FormData {
   name: string;
@@ -34,7 +35,7 @@ interface FormErrors {
   printType?: string;
 }
 
-export function SubmitForm() {
+export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) {
   const [form, setForm] = useState<FormData>({
     name: "",
     contact: "",
@@ -54,8 +55,8 @@ export function SubmitForm() {
   const [trackingCode, setTrackingCode] = useState<string | null>(null);
 
   const estimatedPrice = useMemo(() => {
-    return calculateEstimate(form.paperSize, form.printType, form.finishing, form.quantity);
-  }, [form.paperSize, form.printType, form.finishing, form.quantity]);
+    return calculateEstimate(pricingConfig, form.paperSize, form.printType, form.finishing, form.quantity);
+  }, [pricingConfig, form.paperSize, form.printType, form.finishing, form.quantity]);
 
   function validate(): FormErrors {
     const errs: FormErrors = {};

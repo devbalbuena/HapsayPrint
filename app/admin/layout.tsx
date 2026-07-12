@@ -31,6 +31,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               <Link href="/admin/qr" className="text-zinc-400 hover:text-zinc-100 transition-colors">
                 QR Code
               </Link>
+              <Link href="/admin/settings" className="text-zinc-400 hover:text-zinc-100 transition-colors">
+                Settings
+              </Link>
             </div>
           </div>
 
