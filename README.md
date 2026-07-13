@@ -2,7 +2,7 @@
 
 ## Overview
 
-HapsayPrint is a full-stack print job management system built for small print shops. Customers can submit print orders online — without creating an account — and receive a unique tracking code to monitor their order status in real time. Staff manage incoming jobs from a protected admin dashboard with status tracking, internal notes, analytics, and automated email notifications.
+HapsayPrint is a full-stack print job management system built for small print shops. Customers can submit print orders online — without creating an account — and receive a unique tracking code to monitor their order status in real time. Staff manage incoming jobs from a protected admin dashboard with status tracking, internal notes, analytics, dynamic pricing, shop business hours, and automated email notifications.
 
 ## Live Demo
 
@@ -24,18 +24,23 @@ HapsayPrint is a full-stack print job management system built for small print sh
 - **Job Submission Form** — Customers submit print jobs with their name, contact number, email (optional), and a job description — no account required.
 - **File Upload** — Optional file attachment per job, uploaded via UploadThing and stored securely.
 - **Print Specifications** — Customers can select paper size (Short, Long, A4, Legal), print type (B&W or Colored), quantity, and finishing (None, Lamination, Comb Binding, Spiral Binding).
-- **Live Price Estimate** — A price calculator updates in real time as the customer selects specs, displaying an estimated cost before submission.
+- **Live Price Estimate (Dynamic)** — A price calculator updates in real time as the customer selects specs, displaying an estimated cost based on live pricing settings configured by the admin.
+- **Shop Business Hours / Vacation Mode** — If the store is manually set to "Closed" or is outside automatic operating hours, the public form is hidden and replaced by a customizable "We're Closed" message with schedule details.
 - **Tracking Code** — Each job submission generates a unique `HP-XXXXXX` tracking code shown to the customer on success.
 - **Order Tracking Page** — Customers can visit `/track/[code]` to view the current status of their job (Pending, In Progress, Ready for Pickup, Delivered) along with order details and attached file info.
 
 ### 🔐 Admin Portal
 
 - **Secure Login** — Staff log in via email and bcrypt-hashed password using NextAuth v5 with JWT sessions.
-- **Admin Dashboard** — A full-width table listing all jobs, showing customer name, contact, description, print specs, status, submission date, and attached files.
+- **Admin Dashboard** — A full-width table listing all active jobs, showing customer name, contact, description, print specs, status, submission date, and attached files.
 - **Status Updates** — Inline status dropdown per job with optimistic UI updates. Changing status updates the database and revalidates the page without a full refresh.
 - **Email Notifications** — When a job is marked **Ready for Pickup** and the customer has an email on file, a transactional email is automatically sent via Resend. If sending fails, the status update still succeeds.
 - **Internal Notes** — Admins can open a notes dialog per job to leave and read internal staff comments (e.g. "Customer confirmed matte finish"). Notes show the author's name and a relative timestamp (e.g. "2 hours ago"). Notes are never exposed to customers.
+- **Job Archiving** — Jobs can be archived at any time to remove them from the active dashboard. An optimistic UI ensures it feels instant.
 - **Job Filtering & Search** — The dashboard supports filtering jobs by status and searching by customer name, description, or contact number.
+- **System Settings** (`/admin/settings`):
+  - **Dynamic Pricing:** Admins can adjust base prices (by paper size and print type) and finishing add-ons in real-time. Changes only apply to future jobs.
+  - **Store Status:** A toggle to manually accept or pause orders, plus settings for an automatic schedule (open/close hours and operating days) and a custom closed message.
 - **QR Code Generator** (`/admin/qr`) — Generates a scannable QR code pointing to the public submission form. Admins can download it as a PNG or print it directly to place at the shop counter.
 - **Sign Out** — Session-aware sign out button in the top navigation.
 
@@ -47,6 +52,7 @@ HapsayPrint is a full-stack print job management system built for small print sh
 - **Status Breakdown** — Cards showing the live count of jobs in each status (Pending, In Progress, Ready for Pickup, Delivered).
 - **7-Day Volume Bar Chart** — A Recharts bar chart showing daily job volume for the past 7 days, with the busiest day highlighted.
 - **Most Requested Specs** — Shows the most common print type and finishing option across all jobs, useful for inventory and staffing decisions.
+- **Export to CSV** — Admins can select a month and year to download a complete `.csv` report of all jobs (including revenue, specs, and status) for accounting and bookkeeping.
 
 ---
 
@@ -77,44 +83,40 @@ HapsayPrint is a full-stack print job management system built for small print sh
 ```
 hapsayprint/
 ├── app/
-│   ├── page.tsx              # Public home page: branding + job submission form
+│   ├── page.tsx              # Public home page: branding + job submission form / closed message
 │   ├── layout.tsx            # Root layout with font and toast provider
 │   ├── globals.css           # Global Tailwind styles and CSS tokens
-│   ├── actions.ts            # All Next.js Server Actions (submit job, update status, add note)
+│   ├── actions.ts            # All Next.js Server Actions (submit job, update status, settings, etc.)
 │   ├── admin/
 │   │   ├── layout.tsx        # Admin layout: auth guard + top nav header
-│   │   ├── page.tsx          # Admin dashboard: analytics + job table
-│   │   └── qr/
-│   │       └── page.tsx      # QR code generator page
-│   ├── login/
-│   │   └── page.tsx          # Admin login page
-│   ├── track/
-│   │   └── [code]/
-│   │       └── page.tsx      # Public order tracking page
+│   │   ├── page.tsx          # Admin dashboard: analytics + active job table
+│   │   ├── archive/          # Archived jobs table view
+│   │   ├── settings/         # System settings (pricing + store hours)
+│   │   └── qr/               # QR code generator page
+│   ├── login/                # Admin login page
+│   ├── track/                # Public order tracking page
 │   └── api/
-│       ├── auth/[...nextauth] # NextAuth API route handler
+│       ├── auth/             # NextAuth API route handler
+│       ├── export/           # CSV export generation route
 │       └── uploadthing/      # UploadThing file upload endpoint
 ├── components/
-│   ├── SubmitForm.tsx         # Customer job submission form (with pricing calc)
-│   ├── SubmitSuccess.tsx      # Post-submission success screen with tracking code
+│   ├── SubmitForm.tsx         # Customer job submission form (dynamic pricing calc)
+│   ├── StoreClosedMessage.tsx # UI shown when store is closed
+│   ├── PricingSettingsForm.tsx# Admin UI for updating prices
+│   ├── StoreStatusForm.tsx    # Admin UI for updating store hours
 │   ├── AdminDashboardClient.tsx # Client-side admin table with filtering and status updates
 │   ├── AnalyticsCharts.tsx    # Recharts bar chart + popular specs panel (client)
+│   ├── ExportReportButton.tsx # Client component for downloading CSVs
 │   ├── JobNotesModal.tsx      # Per-job internal notes dialog (client)
-│   ├── TrackOrderForm.tsx     # Tracking code lookup form on the home page
-│   ├── SignOutButton.tsx      # Admin sign-out button
-│   └── ui/                   # shadcn/ui base components (button, input, select, etc.)
+│   └── ui/                   # shadcn/ui base components
 ├── lib/
-│   ├── pricing.ts             # Pricing config: paper sizes, print types, finishing, calc function
-│   ├── analytics.ts           # Server-side Prisma analytics queries
-│   ├── uploadthing.ts         # UploadThing client helper
-│   └── utils.ts               # Tailwind class merge utility (cn)
+│   ├── pricing.ts             # Pricing calc logic and DB fetcher
+│   ├── settings.ts            # Store hours logic and DB fetcher
+│   └── analytics.ts           # Server-side Prisma analytics queries
 ├── prisma/
 │   └── schema.prisma          # Database schema
-├── src/
-│   ├── db.ts                  # Prisma client singleton
-│   └── generated/prisma/      # Auto-generated Prisma client
-├── auth.ts                    # NextAuth configuration (credentials provider, JWT callbacks)
-└── next.config.ts             # Next.js config (UploadThing image domains)
+└── src/
+    └── db.ts                  # Prisma client singleton
 ```
 
 ---
@@ -150,6 +152,7 @@ The core record for a single print order.
 | `printType`     | String?   | BW or COLORED                                  |
 | `finishing`     | String?   | NONE, LAMINATION, BINDING_COMB, BINDING_SPIRAL |
 | `estimatedPrice`| Float?    | Calculated at submission time (₱)              |
+| `archived`      | Boolean   | True if archived by admin                      |
 | `createdAt`     | DateTime  | Submission timestamp                           |
 | `updatedAt`     | DateTime  | Last update timestamp                          |
 
@@ -196,6 +199,14 @@ An admin staff account. Managed manually in the database (no public registration
 | `password`  | String  | bcrypt-hashed password       |
 | `role`      | String  | Defaults to `"ADMIN"`        |
 | `createdAt` | DateTime| Timestamp                    |
+
+---
+
+### `PricingConfig`
+A singleton table (id="default") storing dynamic base prices and add-on costs. Used to calculate estimated prices on the fly.
+
+### `StoreSettings`
+A singleton table (id="default") storing shop business hours, toggle state for accepting orders, and custom closed messages.
 
 ---
 
