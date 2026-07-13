@@ -25,6 +25,7 @@ export function PricingSettingsForm({ config }: { config: PricingConfig }) {
     lamination: config.lamination,
     bindingComb: config.bindingComb,
     bindingSpiral: config.bindingSpiral,
+    rushFee: config.rushFee,
   });
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -93,6 +94,19 @@ export function PricingSettingsForm({ config }: { config: PricingConfig }) {
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm">₱</span>
                 <Input type="number" step="0.01" min="0" name="bindingSpiral" value={formData.bindingSpiral} onChange={handleChange} className="pl-7" />
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800" />
+            
+            <div className="grid grid-cols-[1fr_100px] items-center gap-4">
+              <div>
+                <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Rush Order Fee</Label>
+                <p className="text-xs text-zinc-500 font-normal">Extra charge added when customer requests priority.</p>
+              </div>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm">₱</span>
+                <Input type="number" step="0.01" min="0" name="rushFee" value={formData.rushFee} onChange={handleChange} className="pl-7" />
               </div>
             </div>
           </div>

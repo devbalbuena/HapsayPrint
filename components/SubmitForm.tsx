@@ -25,6 +25,7 @@ interface FormData {
   quantity: number;
   printType: string | null;
   finishing: string | null;
+  isRush: boolean;
 }
 
 interface FormErrors {
@@ -46,6 +47,7 @@ export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) 
     quantity: 1,
     printType: null,
     finishing: "NONE",
+    isRush: false,
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
@@ -55,8 +57,8 @@ export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) 
   const [trackingCode, setTrackingCode] = useState<string | null>(null);
 
   const estimatedPrice = useMemo(() => {
-    return calculateEstimate(pricingConfig, form.paperSize, form.printType, form.finishing, form.quantity);
-  }, [pricingConfig, form.paperSize, form.printType, form.finishing, form.quantity]);
+    return calculateEstimate(pricingConfig, form.paperSize, form.printType, form.finishing, form.quantity, form.isRush);
+  }, [pricingConfig, form.paperSize, form.printType, form.finishing, form.quantity, form.isRush]);
 
   function validate(): FormErrors {
     const errs: FormErrors = {};
@@ -124,6 +126,7 @@ export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) 
         printType: form.printType,
         finishing: form.finishing,
         estimatedPrice,
+        isRush: form.isRush,
       });
 
       if (result.success) {
@@ -147,7 +150,7 @@ export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) 
         name={form.name} 
         trackingCode={trackingCode || undefined}
         onReset={() => {
-          setForm({ name: "", contact: "", email: "", description: "", file: null, paperSize: null, quantity: 1, printType: null, finishing: "NONE" });
+          setForm({ name: "", contact: "", email: "", description: "", file: null, paperSize: null, quantity: 1, printType: null, finishing: "NONE", isRush: false });
           setFileName(null);
           setErrors({});
           setSubmitted(false);
@@ -386,6 +389,47 @@ export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) 
               onChange={handleFileChange}
             />
           </label>
+        </div>
+
+        {/* Rush Order Toggle */}
+        <div
+          className={cn(
+            "flex items-center justify-between gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 select-none",
+            form.isRush
+              ? "border-rose-500 bg-rose-50/50 dark:bg-rose-950/20"
+              : "border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700"
+          )}
+          onClick={() => setForm(p => ({ ...p, isRush: !p.isRush }))}
+        >
+          <div className="flex items-center gap-3">
+            <div className={cn(
+              "w-9 h-9 rounded-lg flex items-center justify-center text-lg shrink-0 transition-colors",
+              form.isRush ? "bg-rose-100 dark:bg-rose-900/50" : "bg-zinc-100 dark:bg-zinc-800"
+            )}>
+              ⚡
+            </div>
+            <div>
+              <p className={cn(
+                "text-sm font-semibold",
+                form.isRush ? "text-rose-700 dark:text-rose-400" : "text-zinc-900 dark:text-zinc-100"
+              )}>
+                Rush / Priority Order
+              </p>
+              <p className="text-xs text-zinc-500">
+                Adds ₱{pricingConfig.rushFee.toFixed(2)} — your job will be printed first
+              </p>
+            </div>
+          </div>
+          {/* Toggle indicator */}
+          <div className={cn(
+            "relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200",
+            form.isRush ? "bg-rose-500" : "bg-zinc-200 dark:bg-zinc-700"
+          )}>
+            <span className={cn(
+              "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition-transform duration-200",
+              form.isRush ? "translate-x-5" : "translate-x-0"
+            )} />
+          </div>
         </div>
 
         {/* Live Price Estimate */}

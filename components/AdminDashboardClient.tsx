@@ -49,6 +49,7 @@ type Job = {
   printType: string | null;
   finishing: string | null;
   estimatedPrice: number | null;
+  isRush: boolean;
   customer: Customer;
   files: FileUpload[];
   notes: {
@@ -307,7 +308,14 @@ export function AdminDashboardClient({ jobs, isArchiveView = false }: Props) {
                   className="hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 transition-colors border-zinc-100 dark:border-zinc-800/50 group"
                 >
                   <TableCell className="pl-6 align-top pt-4">
-                    <p className="font-semibold text-zinc-900 dark:text-zinc-100">{job.customer.name}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-semibold text-zinc-900 dark:text-zinc-100">{job.customer.name}</p>
+                      {job.isRush && (
+                        <span className="bg-rose-500 text-white text-[10px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded shadow-sm">
+                          RUSH
+                        </span>
+                      )}
+                    </div>
                     <p className="text-zinc-500 font-mono text-xs mt-0.5">{job.customer.contact}</p>
                     {job.customer.email && (
                       <p className="text-zinc-400 text-xs mt-0.5 truncate max-w-[150px]">{job.customer.email}</p>
@@ -356,7 +364,14 @@ export function AdminDashboardClient({ jobs, isArchiveView = false }: Props) {
             <div key={job.id} className="p-5 space-y-4 bg-white dark:bg-transparent">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="font-semibold text-zinc-900 dark:text-zinc-100">{job.customer.name}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-semibold text-zinc-900 dark:text-zinc-100">{job.customer.name}</p>
+                    {job.isRush && (
+                      <span className="bg-rose-500 text-white text-[10px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded shadow-sm">
+                        RUSH
+                      </span>
+                    )}
+                  </div>
                   <p className="text-zinc-500 font-mono text-xs mt-0.5">{job.customer.contact}</p>
                 </div>
                 <div className="flex flex-col items-end gap-2">

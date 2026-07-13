@@ -39,7 +39,8 @@ export function calculateEstimate(
   paperSize: string | null,
   printType: string | null,
   finishing: string | null,
-  quantity: number
+  quantity: number,
+  isRush: boolean = false
 ): number {
   if (!paperSize || !printType || quantity < 1) return 0;
 
@@ -64,5 +65,7 @@ export function calculateEstimate(
     finishingPrice = pricingConfig.bindingSpiral;
   }
 
-  return (basePrice * quantity) + (finishingPrice * quantity);
+  const rushSurcharge = isRush ? pricingConfig.rushFee : 0;
+
+  return (basePrice * quantity) + (finishingPrice * quantity) + rushSurcharge;
 }

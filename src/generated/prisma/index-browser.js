@@ -141,6 +141,7 @@ exports.Prisma.JobScalarFieldEnum = {
   finishing: 'finishing',
   estimatedPrice: 'estimatedPrice',
   archived: 'archived',
+  isRush: 'isRush',
   customerId: 'customerId'
 };
 
@@ -183,6 +184,7 @@ exports.Prisma.PricingConfigScalarFieldEnum = {
   lamination: 'lamination',
   bindingComb: 'bindingComb',
   bindingSpiral: 'bindingSpiral',
+  rushFee: 'rushFee',
   updatedAt: 'updatedAt'
 };
 

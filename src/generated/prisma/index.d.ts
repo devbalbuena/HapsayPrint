@@ -2642,6 +2642,7 @@ export namespace Prisma {
     finishing: string | null
     estimatedPrice: number | null
     archived: boolean | null
+    isRush: boolean | null
     customerId: string | null
   }
 
@@ -2658,6 +2659,7 @@ export namespace Prisma {
     finishing: string | null
     estimatedPrice: number | null
     archived: boolean | null
+    isRush: boolean | null
     customerId: string | null
   }
 
@@ -2674,6 +2676,7 @@ export namespace Prisma {
     finishing: number
     estimatedPrice: number
     archived: number
+    isRush: number
     customerId: number
     _all: number
   }
@@ -2702,6 +2705,7 @@ export namespace Prisma {
     finishing?: true
     estimatedPrice?: true
     archived?: true
+    isRush?: true
     customerId?: true
   }
 
@@ -2718,6 +2722,7 @@ export namespace Prisma {
     finishing?: true
     estimatedPrice?: true
     archived?: true
+    isRush?: true
     customerId?: true
   }
 
@@ -2734,6 +2739,7 @@ export namespace Prisma {
     finishing?: true
     estimatedPrice?: true
     archived?: true
+    isRush?: true
     customerId?: true
     _all?: true
   }
@@ -2837,6 +2843,7 @@ export namespace Prisma {
     finishing: string | null
     estimatedPrice: number | null
     archived: boolean
+    isRush: boolean
     customerId: string
     _count: JobCountAggregateOutputType | null
     _avg: JobAvgAggregateOutputType | null
@@ -2872,6 +2879,7 @@ export namespace Prisma {
     finishing?: boolean
     estimatedPrice?: boolean
     archived?: boolean
+    isRush?: boolean
     customerId?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     files?: boolean | Job$filesArgs<ExtArgs>
@@ -2892,6 +2900,7 @@ export namespace Prisma {
     finishing?: boolean
     estimatedPrice?: boolean
     archived?: boolean
+    isRush?: boolean
     customerId?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["job"]>
@@ -2909,6 +2918,7 @@ export namespace Prisma {
     finishing?: boolean
     estimatedPrice?: boolean
     archived?: boolean
+    isRush?: boolean
     customerId?: boolean
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["job"]>
@@ -2926,10 +2936,11 @@ export namespace Prisma {
     finishing?: boolean
     estimatedPrice?: boolean
     archived?: boolean
+    isRush?: boolean
     customerId?: boolean
   }
 
-  export type JobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "description" | "status" | "createdAt" | "updatedAt" | "trackingCode" | "paperSize" | "quantity" | "printType" | "finishing" | "estimatedPrice" | "archived" | "customerId", ExtArgs["result"]["job"]>
+  export type JobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "description" | "status" | "createdAt" | "updatedAt" | "trackingCode" | "paperSize" | "quantity" | "printType" | "finishing" | "estimatedPrice" | "archived" | "isRush" | "customerId", ExtArgs["result"]["job"]>
   export type JobInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CustomerDefaultArgs<ExtArgs>
     files?: boolean | Job$filesArgs<ExtArgs>
@@ -2963,6 +2974,7 @@ export namespace Prisma {
       finishing: string | null
       estimatedPrice: number | null
       archived: boolean
+      isRush: boolean
       customerId: string
     }, ExtArgs["result"]["job"]>
     composites: {}
@@ -3402,6 +3414,7 @@ export namespace Prisma {
     readonly finishing: FieldRef<"Job", 'String'>
     readonly estimatedPrice: FieldRef<"Job", 'Float'>
     readonly archived: FieldRef<"Job", 'Boolean'>
+    readonly isRush: FieldRef<"Job", 'Boolean'>
     readonly customerId: FieldRef<"Job", 'String'>
   }
     
@@ -7129,6 +7142,7 @@ export namespace Prisma {
     lamination: number | null
     bindingComb: number | null
     bindingSpiral: number | null
+    rushFee: number | null
   }
 
   export type PricingConfigSumAggregateOutputType = {
@@ -7143,6 +7157,7 @@ export namespace Prisma {
     lamination: number | null
     bindingComb: number | null
     bindingSpiral: number | null
+    rushFee: number | null
   }
 
   export type PricingConfigMinAggregateOutputType = {
@@ -7158,6 +7173,7 @@ export namespace Prisma {
     lamination: number | null
     bindingComb: number | null
     bindingSpiral: number | null
+    rushFee: number | null
     updatedAt: Date | null
   }
 
@@ -7174,6 +7190,7 @@ export namespace Prisma {
     lamination: number | null
     bindingComb: number | null
     bindingSpiral: number | null
+    rushFee: number | null
     updatedAt: Date | null
   }
 
@@ -7190,6 +7207,7 @@ export namespace Prisma {
     lamination: number
     bindingComb: number
     bindingSpiral: number
+    rushFee: number
     updatedAt: number
     _all: number
   }
@@ -7207,6 +7225,7 @@ export namespace Prisma {
     lamination?: true
     bindingComb?: true
     bindingSpiral?: true
+    rushFee?: true
   }
 
   export type PricingConfigSumAggregateInputType = {
@@ -7221,6 +7240,7 @@ export namespace Prisma {
     lamination?: true
     bindingComb?: true
     bindingSpiral?: true
+    rushFee?: true
   }
 
   export type PricingConfigMinAggregateInputType = {
@@ -7236,6 +7256,7 @@ export namespace Prisma {
     lamination?: true
     bindingComb?: true
     bindingSpiral?: true
+    rushFee?: true
     updatedAt?: true
   }
 
@@ -7252,6 +7273,7 @@ export namespace Prisma {
     lamination?: true
     bindingComb?: true
     bindingSpiral?: true
+    rushFee?: true
     updatedAt?: true
   }
 
@@ -7268,6 +7290,7 @@ export namespace Prisma {
     lamination?: true
     bindingComb?: true
     bindingSpiral?: true
+    rushFee?: true
     updatedAt?: true
     _all?: true
   }
@@ -7371,6 +7394,7 @@ export namespace Prisma {
     lamination: number
     bindingComb: number
     bindingSpiral: number
+    rushFee: number
     updatedAt: Date
     _count: PricingConfigCountAggregateOutputType | null
     _avg: PricingConfigAvgAggregateOutputType | null
@@ -7406,6 +7430,7 @@ export namespace Prisma {
     lamination?: boolean
     bindingComb?: boolean
     bindingSpiral?: boolean
+    rushFee?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["pricingConfig"]>
 
@@ -7422,6 +7447,7 @@ export namespace Prisma {
     lamination?: boolean
     bindingComb?: boolean
     bindingSpiral?: boolean
+    rushFee?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["pricingConfig"]>
 
@@ -7438,6 +7464,7 @@ export namespace Prisma {
     lamination?: boolean
     bindingComb?: boolean
     bindingSpiral?: boolean
+    rushFee?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["pricingConfig"]>
 
@@ -7454,10 +7481,11 @@ export namespace Prisma {
     lamination?: boolean
     bindingComb?: boolean
     bindingSpiral?: boolean
+    rushFee?: boolean
     updatedAt?: boolean
   }
 
-  export type PricingConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "shortBw" | "shortCol" | "longBw" | "longCol" | "a4Bw" | "a4Col" | "legalBw" | "legalCol" | "lamination" | "bindingComb" | "bindingSpiral" | "updatedAt", ExtArgs["result"]["pricingConfig"]>
+  export type PricingConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "shortBw" | "shortCol" | "longBw" | "longCol" | "a4Bw" | "a4Col" | "legalBw" | "legalCol" | "lamination" | "bindingComb" | "bindingSpiral" | "rushFee" | "updatedAt", ExtArgs["result"]["pricingConfig"]>
 
   export type $PricingConfigPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "PricingConfig"
@@ -7475,6 +7503,7 @@ export namespace Prisma {
       lamination: number
       bindingComb: number
       bindingSpiral: number
+      rushFee: number
       updatedAt: Date
     }, ExtArgs["result"]["pricingConfig"]>
     composites: {}
@@ -7911,6 +7940,7 @@ export namespace Prisma {
     readonly lamination: FieldRef<"PricingConfig", 'Float'>
     readonly bindingComb: FieldRef<"PricingConfig", 'Float'>
     readonly bindingSpiral: FieldRef<"PricingConfig", 'Float'>
+    readonly rushFee: FieldRef<"PricingConfig", 'Float'>
     readonly updatedAt: FieldRef<"PricingConfig", 'DateTime'>
   }
     
@@ -9360,6 +9390,7 @@ export namespace Prisma {
     finishing: 'finishing',
     estimatedPrice: 'estimatedPrice',
     archived: 'archived',
+    isRush: 'isRush',
     customerId: 'customerId'
   };
 
@@ -9414,6 +9445,7 @@ export namespace Prisma {
     lamination: 'lamination',
     bindingComb: 'bindingComb',
     bindingSpiral: 'bindingSpiral',
+    rushFee: 'rushFee',
     updatedAt: 'updatedAt'
   };
 
@@ -9614,6 +9646,7 @@ export namespace Prisma {
     finishing?: StringNullableFilter<"Job"> | string | null
     estimatedPrice?: FloatNullableFilter<"Job"> | number | null
     archived?: BoolFilter<"Job"> | boolean
+    isRush?: BoolFilter<"Job"> | boolean
     customerId?: StringFilter<"Job"> | string
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     files?: FileUploadListRelationFilter
@@ -9633,6 +9666,7 @@ export namespace Prisma {
     finishing?: SortOrderInput | SortOrder
     estimatedPrice?: SortOrderInput | SortOrder
     archived?: SortOrder
+    isRush?: SortOrder
     customerId?: SortOrder
     customer?: CustomerOrderByWithRelationInput
     files?: FileUploadOrderByRelationAggregateInput
@@ -9655,6 +9689,7 @@ export namespace Prisma {
     finishing?: StringNullableFilter<"Job"> | string | null
     estimatedPrice?: FloatNullableFilter<"Job"> | number | null
     archived?: BoolFilter<"Job"> | boolean
+    isRush?: BoolFilter<"Job"> | boolean
     customerId?: StringFilter<"Job"> | string
     customer?: XOR<CustomerScalarRelationFilter, CustomerWhereInput>
     files?: FileUploadListRelationFilter
@@ -9674,6 +9709,7 @@ export namespace Prisma {
     finishing?: SortOrderInput | SortOrder
     estimatedPrice?: SortOrderInput | SortOrder
     archived?: SortOrder
+    isRush?: SortOrder
     customerId?: SortOrder
     _count?: JobCountOrderByAggregateInput
     _avg?: JobAvgOrderByAggregateInput
@@ -9698,6 +9734,7 @@ export namespace Prisma {
     finishing?: StringNullableWithAggregatesFilter<"Job"> | string | null
     estimatedPrice?: FloatNullableWithAggregatesFilter<"Job"> | number | null
     archived?: BoolWithAggregatesFilter<"Job"> | boolean
+    isRush?: BoolWithAggregatesFilter<"Job"> | boolean
     customerId?: StringWithAggregatesFilter<"Job"> | string
   }
 
@@ -9895,6 +9932,7 @@ export namespace Prisma {
     lamination?: FloatFilter<"PricingConfig"> | number
     bindingComb?: FloatFilter<"PricingConfig"> | number
     bindingSpiral?: FloatFilter<"PricingConfig"> | number
+    rushFee?: FloatFilter<"PricingConfig"> | number
     updatedAt?: DateTimeFilter<"PricingConfig"> | Date | string
   }
 
@@ -9911,6 +9949,7 @@ export namespace Prisma {
     lamination?: SortOrder
     bindingComb?: SortOrder
     bindingSpiral?: SortOrder
+    rushFee?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -9930,6 +9969,7 @@ export namespace Prisma {
     lamination?: FloatFilter<"PricingConfig"> | number
     bindingComb?: FloatFilter<"PricingConfig"> | number
     bindingSpiral?: FloatFilter<"PricingConfig"> | number
+    rushFee?: FloatFilter<"PricingConfig"> | number
     updatedAt?: DateTimeFilter<"PricingConfig"> | Date | string
   }, "id">
 
@@ -9946,6 +9986,7 @@ export namespace Prisma {
     lamination?: SortOrder
     bindingComb?: SortOrder
     bindingSpiral?: SortOrder
+    rushFee?: SortOrder
     updatedAt?: SortOrder
     _count?: PricingConfigCountOrderByAggregateInput
     _avg?: PricingConfigAvgOrderByAggregateInput
@@ -9970,6 +10011,7 @@ export namespace Prisma {
     lamination?: FloatWithAggregatesFilter<"PricingConfig"> | number
     bindingComb?: FloatWithAggregatesFilter<"PricingConfig"> | number
     bindingSpiral?: FloatWithAggregatesFilter<"PricingConfig"> | number
+    rushFee?: FloatWithAggregatesFilter<"PricingConfig"> | number
     updatedAt?: DateTimeWithAggregatesFilter<"PricingConfig"> | Date | string
   }
 
@@ -10113,6 +10155,7 @@ export namespace Prisma {
     finishing?: string | null
     estimatedPrice?: number | null
     archived?: boolean
+    isRush?: boolean
     customer: CustomerCreateNestedOneWithoutJobsInput
     files?: FileUploadCreateNestedManyWithoutJobInput
     notes?: JobNoteCreateNestedManyWithoutJobInput
@@ -10131,6 +10174,7 @@ export namespace Prisma {
     finishing?: string | null
     estimatedPrice?: number | null
     archived?: boolean
+    isRush?: boolean
     customerId: string
     files?: FileUploadUncheckedCreateNestedManyWithoutJobInput
     notes?: JobNoteUncheckedCreateNestedManyWithoutJobInput
@@ -10149,6 +10193,7 @@ export namespace Prisma {
     finishing?: NullableStringFieldUpdateOperationsInput | string | null
     estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     archived?: BoolFieldUpdateOperationsInput | boolean
+    isRush?: BoolFieldUpdateOperationsInput | boolean
     customer?: CustomerUpdateOneRequiredWithoutJobsNestedInput
     files?: FileUploadUpdateManyWithoutJobNestedInput
     notes?: JobNoteUpdateManyWithoutJobNestedInput
@@ -10167,6 +10212,7 @@ export namespace Prisma {
     finishing?: NullableStringFieldUpdateOperationsInput | string | null
     estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     archived?: BoolFieldUpdateOperationsInput | boolean
+    isRush?: BoolFieldUpdateOperationsInput | boolean
     customerId?: StringFieldUpdateOperationsInput | string
     files?: FileUploadUncheckedUpdateManyWithoutJobNestedInput
     notes?: JobNoteUncheckedUpdateManyWithoutJobNestedInput
@@ -10185,6 +10231,7 @@ export namespace Prisma {
     finishing?: string | null
     estimatedPrice?: number | null
     archived?: boolean
+    isRush?: boolean
     customerId: string
   }
 
@@ -10201,6 +10248,7 @@ export namespace Prisma {
     finishing?: NullableStringFieldUpdateOperationsInput | string | null
     estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     archived?: BoolFieldUpdateOperationsInput | boolean
+    isRush?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type JobUncheckedUpdateManyInput = {
@@ -10216,6 +10264,7 @@ export namespace Prisma {
     finishing?: NullableStringFieldUpdateOperationsInput | string | null
     estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     archived?: BoolFieldUpdateOperationsInput | boolean
+    isRush?: BoolFieldUpdateOperationsInput | boolean
     customerId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -10415,6 +10464,7 @@ export namespace Prisma {
     lamination?: number
     bindingComb?: number
     bindingSpiral?: number
+    rushFee?: number
     updatedAt?: Date | string
   }
 
@@ -10431,6 +10481,7 @@ export namespace Prisma {
     lamination?: number
     bindingComb?: number
     bindingSpiral?: number
+    rushFee?: number
     updatedAt?: Date | string
   }
 
@@ -10447,6 +10498,7 @@ export namespace Prisma {
     lamination?: FloatFieldUpdateOperationsInput | number
     bindingComb?: FloatFieldUpdateOperationsInput | number
     bindingSpiral?: FloatFieldUpdateOperationsInput | number
+    rushFee?: FloatFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -10463,6 +10515,7 @@ export namespace Prisma {
     lamination?: FloatFieldUpdateOperationsInput | number
     bindingComb?: FloatFieldUpdateOperationsInput | number
     bindingSpiral?: FloatFieldUpdateOperationsInput | number
+    rushFee?: FloatFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -10479,6 +10532,7 @@ export namespace Prisma {
     lamination?: number
     bindingComb?: number
     bindingSpiral?: number
+    rushFee?: number
     updatedAt?: Date | string
   }
 
@@ -10495,6 +10549,7 @@ export namespace Prisma {
     lamination?: FloatFieldUpdateOperationsInput | number
     bindingComb?: FloatFieldUpdateOperationsInput | number
     bindingSpiral?: FloatFieldUpdateOperationsInput | number
+    rushFee?: FloatFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -10511,6 +10566,7 @@ export namespace Prisma {
     lamination?: FloatFieldUpdateOperationsInput | number
     bindingComb?: FloatFieldUpdateOperationsInput | number
     bindingSpiral?: FloatFieldUpdateOperationsInput | number
+    rushFee?: FloatFieldUpdateOperationsInput | number
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -10793,6 +10849,7 @@ export namespace Prisma {
     finishing?: SortOrder
     estimatedPrice?: SortOrder
     archived?: SortOrder
+    isRush?: SortOrder
     customerId?: SortOrder
   }
 
@@ -10814,6 +10871,7 @@ export namespace Prisma {
     finishing?: SortOrder
     estimatedPrice?: SortOrder
     archived?: SortOrder
+    isRush?: SortOrder
     customerId?: SortOrder
   }
 
@@ -10830,6 +10888,7 @@ export namespace Prisma {
     finishing?: SortOrder
     estimatedPrice?: SortOrder
     archived?: SortOrder
+    isRush?: SortOrder
     customerId?: SortOrder
   }
 
@@ -11000,6 +11059,7 @@ export namespace Prisma {
     lamination?: SortOrder
     bindingComb?: SortOrder
     bindingSpiral?: SortOrder
+    rushFee?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -11015,6 +11075,7 @@ export namespace Prisma {
     lamination?: SortOrder
     bindingComb?: SortOrder
     bindingSpiral?: SortOrder
+    rushFee?: SortOrder
   }
 
   export type PricingConfigMaxOrderByAggregateInput = {
@@ -11030,6 +11091,7 @@ export namespace Prisma {
     lamination?: SortOrder
     bindingComb?: SortOrder
     bindingSpiral?: SortOrder
+    rushFee?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -11046,6 +11108,7 @@ export namespace Prisma {
     lamination?: SortOrder
     bindingComb?: SortOrder
     bindingSpiral?: SortOrder
+    rushFee?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -11061,6 +11124,7 @@ export namespace Prisma {
     lamination?: SortOrder
     bindingComb?: SortOrder
     bindingSpiral?: SortOrder
+    rushFee?: SortOrder
   }
 
   export type FloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -11602,6 +11666,7 @@ export namespace Prisma {
     finishing?: string | null
     estimatedPrice?: number | null
     archived?: boolean
+    isRush?: boolean
     files?: FileUploadCreateNestedManyWithoutJobInput
     notes?: JobNoteCreateNestedManyWithoutJobInput
   }
@@ -11619,6 +11684,7 @@ export namespace Prisma {
     finishing?: string | null
     estimatedPrice?: number | null
     archived?: boolean
+    isRush?: boolean
     files?: FileUploadUncheckedCreateNestedManyWithoutJobInput
     notes?: JobNoteUncheckedCreateNestedManyWithoutJobInput
   }
@@ -11665,6 +11731,7 @@ export namespace Prisma {
     finishing?: StringNullableFilter<"Job"> | string | null
     estimatedPrice?: FloatNullableFilter<"Job"> | number | null
     archived?: BoolFilter<"Job"> | boolean
+    isRush?: BoolFilter<"Job"> | boolean
     customerId?: StringFilter<"Job"> | string
   }
 
@@ -11834,6 +11901,7 @@ export namespace Prisma {
     finishing?: string | null
     estimatedPrice?: number | null
     archived?: boolean
+    isRush?: boolean
     customer: CustomerCreateNestedOneWithoutJobsInput
     notes?: JobNoteCreateNestedManyWithoutJobInput
   }
@@ -11851,6 +11919,7 @@ export namespace Prisma {
     finishing?: string | null
     estimatedPrice?: number | null
     archived?: boolean
+    isRush?: boolean
     customerId: string
     notes?: JobNoteUncheckedCreateNestedManyWithoutJobInput
   }
@@ -11884,6 +11953,7 @@ export namespace Prisma {
     finishing?: NullableStringFieldUpdateOperationsInput | string | null
     estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     archived?: BoolFieldUpdateOperationsInput | boolean
+    isRush?: BoolFieldUpdateOperationsInput | boolean
     customer?: CustomerUpdateOneRequiredWithoutJobsNestedInput
     notes?: JobNoteUpdateManyWithoutJobNestedInput
   }
@@ -11901,6 +11971,7 @@ export namespace Prisma {
     finishing?: NullableStringFieldUpdateOperationsInput | string | null
     estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     archived?: BoolFieldUpdateOperationsInput | boolean
+    isRush?: BoolFieldUpdateOperationsInput | boolean
     customerId?: StringFieldUpdateOperationsInput | string
     notes?: JobNoteUncheckedUpdateManyWithoutJobNestedInput
   }
@@ -11958,6 +12029,7 @@ export namespace Prisma {
     finishing?: string | null
     estimatedPrice?: number | null
     archived?: boolean
+    isRush?: boolean
     customer: CustomerCreateNestedOneWithoutJobsInput
     files?: FileUploadCreateNestedManyWithoutJobInput
   }
@@ -11975,6 +12047,7 @@ export namespace Prisma {
     finishing?: string | null
     estimatedPrice?: number | null
     archived?: boolean
+    isRush?: boolean
     customerId: string
     files?: FileUploadUncheckedCreateNestedManyWithoutJobInput
   }
@@ -12031,6 +12104,7 @@ export namespace Prisma {
     finishing?: NullableStringFieldUpdateOperationsInput | string | null
     estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     archived?: BoolFieldUpdateOperationsInput | boolean
+    isRush?: BoolFieldUpdateOperationsInput | boolean
     customer?: CustomerUpdateOneRequiredWithoutJobsNestedInput
     files?: FileUploadUpdateManyWithoutJobNestedInput
   }
@@ -12048,6 +12122,7 @@ export namespace Prisma {
     finishing?: NullableStringFieldUpdateOperationsInput | string | null
     estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     archived?: BoolFieldUpdateOperationsInput | boolean
+    isRush?: BoolFieldUpdateOperationsInput | boolean
     customerId?: StringFieldUpdateOperationsInput | string
     files?: FileUploadUncheckedUpdateManyWithoutJobNestedInput
   }
@@ -12094,6 +12169,7 @@ export namespace Prisma {
     finishing?: string | null
     estimatedPrice?: number | null
     archived?: boolean
+    isRush?: boolean
   }
 
   export type JobUpdateWithoutCustomerInput = {
@@ -12109,6 +12185,7 @@ export namespace Prisma {
     finishing?: NullableStringFieldUpdateOperationsInput | string | null
     estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     archived?: BoolFieldUpdateOperationsInput | boolean
+    isRush?: BoolFieldUpdateOperationsInput | boolean
     files?: FileUploadUpdateManyWithoutJobNestedInput
     notes?: JobNoteUpdateManyWithoutJobNestedInput
   }
@@ -12126,6 +12203,7 @@ export namespace Prisma {
     finishing?: NullableStringFieldUpdateOperationsInput | string | null
     estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     archived?: BoolFieldUpdateOperationsInput | boolean
+    isRush?: BoolFieldUpdateOperationsInput | boolean
     files?: FileUploadUncheckedUpdateManyWithoutJobNestedInput
     notes?: JobNoteUncheckedUpdateManyWithoutJobNestedInput
   }
@@ -12143,6 +12221,7 @@ export namespace Prisma {
     finishing?: NullableStringFieldUpdateOperationsInput | string | null
     estimatedPrice?: NullableFloatFieldUpdateOperationsInput | number | null
     archived?: BoolFieldUpdateOperationsInput | boolean
+    isRush?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type FileUploadCreateManyJobInput = {

@@ -37,6 +37,7 @@ model Job {
   finishing    String?
   estimatedPrice Float?
   archived       Boolean   @default(false)
+  isRush         Boolean   @default(false)
 
   customerId  String
   customer    Customer    @relation(fields: [customerId], references: [id])
@@ -93,6 +94,7 @@ model PricingConfig {
   lamination    Float    @default(15)
   bindingComb   Float    @default(50)
   bindingSpiral Float    @default(80)
+  rushFee       Float    @default(50)
 
   updatedAt     DateTime @updatedAt
 }

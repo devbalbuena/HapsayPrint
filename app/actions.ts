@@ -68,6 +68,7 @@ export type SubmitPrintJobData = {
   printType?: string | null;
   finishing?: string | null;
   estimatedPrice?: number;
+  isRush?: boolean;
 };
 
 export async function submitPrintJob(data: SubmitPrintJobData) {
@@ -103,6 +104,7 @@ export async function submitPrintJob(data: SubmitPrintJobData) {
           printType: data.printType,
           finishing: data.finishing,
           estimatedPrice: data.estimatedPrice,
+          isRush: data.isRush ?? false,
         },
       });
 
