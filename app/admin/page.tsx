@@ -16,6 +16,7 @@ import {
 import type { Metadata } from "next";
 import React from "react";
 import Link from "next/link";
+import { ExportReportButton } from "@/components/ExportReportButton";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | HapsayPrint",
@@ -108,7 +109,10 @@ export default async function AdminPage() {
 
         {/* ── Row 3: Chart + Insights ── */}
         <div>
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-4">Analytics</h2>
+          <div className="flex items-center justify-between gap-4 mb-4">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-400">Analytics</h2>
+            <ExportReportButton />
+          </div>
           <AnalyticsCharts
             dailyVolume={analytics.dailyVolume}
             topPrintType={analytics.topPrintType}
