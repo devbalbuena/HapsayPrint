@@ -199,3 +199,32 @@ export async function updatePricingConfig(data: Record<string, number>) {
     return { success: false, error: "Failed to save prices" };
   }
 }
+
+export async function updateStoreSettings(data: {
+  isAcceptingOrders: boolean;
+  closedMessage: string;
+  scheduleEnabled: boolean;
+  openTime: string;
+  closeTime: string;
+  openDays: string;
+}) {
+  const session = await auth();
+  if (!session) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  try {
+    await prisma.storeSettings.upsert({
+      where: { id: "default" },
+      update: data,
+      create: { id: "default", ...data },
+    });
+
+    revalidatePath("/");
+    revalidatePath("/admin/settings");
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to update store settings:", error);
+    return { success: false, error: "Failed to save settings" };
+  }
+}

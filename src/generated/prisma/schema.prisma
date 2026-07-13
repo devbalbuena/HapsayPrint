@@ -96,3 +96,19 @@ model PricingConfig {
 
   updatedAt DateTime @updatedAt
 }
+
+model StoreSettings {
+  id String @id @default("default")
+
+  // Manual override
+  isAcceptingOrders Boolean @default(true)
+  closedMessage     String  @default("We are currently closed and not accepting new print jobs at this time. Please check back later!")
+
+  // Automatic schedule
+  scheduleEnabled Boolean @default(false)
+  openTime        String  @default("08:00") // 24-hr format e.g. "08:00"
+  closeTime       String  @default("17:00")
+  openDays        String  @default("MON,TUE,WED,THU,FRI") // comma-separated
+
+  updatedAt DateTime @updatedAt
+}

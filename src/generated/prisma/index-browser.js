@@ -186,6 +186,17 @@ exports.Prisma.PricingConfigScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.StoreSettingsScalarFieldEnum = {
+  id: 'id',
+  isAcceptingOrders: 'isAcceptingOrders',
+  closedMessage: 'closedMessage',
+  scheduleEnabled: 'scheduleEnabled',
+  openTime: 'openTime',
+  closeTime: 'closeTime',
+  openDays: 'openDays',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -213,7 +224,8 @@ exports.Prisma.ModelName = {
   FileUpload: 'FileUpload',
   User: 'User',
   JobNote: 'JobNote',
-  PricingConfig: 'PricingConfig'
+  PricingConfig: 'PricingConfig',
+  StoreSettings: 'StoreSettings'
 };
 
 /**

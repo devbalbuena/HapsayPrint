@@ -3,9 +3,15 @@ import { TrackOrderForm } from "@/components/TrackOrderForm";
 import { PrinterIcon, CheckCircle2Icon } from "lucide-react";
 import Link from "next/link";
 import { getPricingConfig } from "@/lib/pricing";
+import { getStoreSettings, computeStoreStatus } from "@/lib/settings";
+import { StoreClosedMessage } from "@/components/StoreClosedMessage";
 
 export default async function HomePage() {
-  const pricingConfig = await getPricingConfig();
+  const [pricingConfig, storeSettings] = await Promise.all([
+    getPricingConfig(),
+    getStoreSettings(),
+  ]);
+  const { isOpen, message } = computeStoreStatus(storeSettings);
 
   return (
     <main className="min-h-screen w-full flex flex-col lg:flex-row bg-background">
@@ -66,10 +72,20 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* RIGHT SIDE: The Form */}
+      {/* RIGHT SIDE: The Form or Closed Message */}
       <div className="flex-1 flex items-center justify-center p-6 lg:p-12 xl:p-20 bg-zinc-50/50 dark:bg-background">
         <div className="w-full max-w-xl mx-auto">
-          <SubmitForm pricingConfig={pricingConfig} />
+          {isOpen ? (
+            <SubmitForm pricingConfig={pricingConfig} />
+          ) : (
+            <StoreClosedMessage
+              message={message}
+              openTime={storeSettings.openTime}
+              closeTime={storeSettings.closeTime}
+              openDays={storeSettings.openDays}
+              scheduleEnabled={storeSettings.scheduleEnabled}
+            />
+          )}
         </div>
       </div>
       
