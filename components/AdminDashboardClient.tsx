@@ -10,7 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -18,7 +17,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SearchIcon, FileTextIcon, ExternalLinkIcon, InboxIcon, ListFilterIcon, ArchiveIcon, ArchiveRestoreIcon } from "lucide-react";
+import {
+  SearchIcon,
+  FileTextIcon,
+  ExternalLinkIcon,
+  InboxIcon,
+  ListFilterIcon,
+  ArchiveIcon,
+  ArchiveRestoreIcon,
+  CopyIcon,
+  CheckIcon,
+  StickyNoteIcon,
+} from "lucide-react";
 import { toast } from "sonner";
 import { updateJobStatus, toggleArchiveJob } from "@/app/actions";
 import { cn } from "@/lib/utils";
@@ -101,6 +111,34 @@ function formatDate(date: Date) {
   }).format(new Date(date));
 }
 
+/** A small button that copies text to clipboard and shows a ✓ tick for 2s */
+function CopyButton({ value, label }: { value: string; label: string }) {
+  const [copied, setCopied] = useState(false);
+
+  function handleCopy(e: React.MouseEvent) {
+    e.stopPropagation();
+    navigator.clipboard.writeText(value).then(() => {
+      setCopied(true);
+      toast.success(`Copied ${label}!`);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
+
+  return (
+    <button
+      onClick={handleCopy}
+      title={`Copy ${label}`}
+      className="ml-1 inline-flex items-center justify-center w-5 h-5 rounded text-zinc-300 hover:text-zinc-600 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors opacity-0 group-hover/customer:opacity-100"
+    >
+      {copied ? (
+        <CheckIcon className="w-3 h-3 text-emerald-500" />
+      ) : (
+        <CopyIcon className="w-3 h-3" />
+      )}
+    </button>
+  );
+}
+
 function FileLinks({ files }: { files: FileUpload[] }) {
   if (files.length === 0)
     return <span className="text-xs text-zinc-400 font-medium">—</span>;
@@ -176,7 +214,8 @@ function StatusSelect({ job }: { job: Job }) {
   );
 }
 
-function ArchiveButton({ jobId, isArchiveView }: { jobId: string; isArchiveView: boolean }) {
+/** Icon-only archive button with tooltip */
+function ArchiveIconButton({ jobId, isArchiveView }: { jobId: string; isArchiveView: boolean }) {
   const [isPending, startTransition] = useTransition();
 
   function handleClick() {
@@ -196,7 +235,7 @@ function ArchiveButton({ jobId, isArchiveView }: { jobId: string; isArchiveView:
       disabled={isPending}
       title={isArchiveView ? "Restore to dashboard" : "Archive this job"}
       className={cn(
-        "relative inline-flex items-center gap-1.5 h-8 px-3 text-xs font-medium rounded-md border transition-colors disabled:opacity-50 disabled:cursor-wait",
+        "relative inline-flex items-center justify-center w-8 h-8 rounded-lg border transition-colors disabled:opacity-50 disabled:cursor-wait",
         isArchiveView
           ? "border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/30 dark:hover:bg-emerald-900/30 dark:text-emerald-400"
           : "border-zinc-200 dark:border-zinc-800 bg-white hover:bg-zinc-100 dark:bg-zinc-950 dark:hover:bg-zinc-900 text-zinc-500 dark:text-zinc-400"
@@ -209,7 +248,6 @@ function ArchiveButton({ jobId, isArchiveView }: { jobId: string; isArchiveView:
       ) : (
         <ArchiveIcon className="w-3.5 h-3.5" />
       )}
-      {isArchiveView ? "Restore" : "Archive"}
     </button>
   );
 }
@@ -298,7 +336,8 @@ export function AdminDashboardClient({ jobs, isArchiveView = false }: Props) {
                 <TableHead className="h-11 font-semibold text-zinc-500 text-xs uppercase tracking-wider w-[180px]">Specs</TableHead>
                 <TableHead className="h-11 font-semibold text-zinc-500 text-xs uppercase tracking-wider w-[160px]">Status</TableHead>
                 <TableHead className="h-11 font-semibold text-zinc-500 text-xs uppercase tracking-wider w-[140px]">Submitted</TableHead>
-                <TableHead className="h-11 font-semibold text-zinc-500 text-xs uppercase tracking-wider w-[180px] pr-6">Files</TableHead>
+                <TableHead className="h-11 font-semibold text-zinc-500 text-xs uppercase tracking-wider w-[160px]">Files</TableHead>
+                <TableHead className="h-11 font-semibold text-zinc-500 text-xs uppercase tracking-wider w-[100px] pr-6 text-center">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -307,6 +346,7 @@ export function AdminDashboardClient({ jobs, isArchiveView = false }: Props) {
                   key={job.id}
                   className="hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 transition-colors border-zinc-100 dark:border-zinc-800/50 group"
                 >
+                  {/* Customer cell with copy buttons */}
                   <TableCell className="pl-6 align-top pt-4">
                     <div className="flex items-center gap-2">
                       <p className="font-semibold text-zinc-900 dark:text-zinc-100">{job.customer.name}</p>
@@ -316,14 +356,22 @@ export function AdminDashboardClient({ jobs, isArchiveView = false }: Props) {
                         </span>
                       )}
                     </div>
-                    <p className="text-zinc-500 font-mono text-xs mt-0.5">{job.customer.contact}</p>
+                    <div className="group/customer flex items-center mt-0.5">
+                      <p className="text-zinc-500 font-mono text-xs">{job.customer.contact}</p>
+                      <CopyButton value={job.customer.contact} label="phone number" />
+                    </div>
                     {job.customer.email && (
-                      <p className="text-zinc-400 text-xs mt-0.5 truncate max-w-[150px]">{job.customer.email}</p>
+                      <div className="group/customer flex items-center mt-0.5">
+                        <p className="text-zinc-400 text-xs truncate max-w-[130px]">{job.customer.email}</p>
+                        <CopyButton value={job.customer.email} label="email" />
+                      </div>
                     )}
                   </TableCell>
+
                   <TableCell className="align-top pt-4">
                     <p className="text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed line-clamp-2 pr-4">{job.description}</p>
                   </TableCell>
+
                   <TableCell className="align-top pt-4">
                     {job.paperSize ? (
                       <div className="text-xs text-zinc-600 dark:text-zinc-400 space-y-1">
@@ -335,20 +383,27 @@ export function AdminDashboardClient({ jobs, isArchiveView = false }: Props) {
                       <span className="text-xs text-zinc-400 font-medium">—</span>
                     )}
                   </TableCell>
-                  <TableCell className="align-top pt-3.5 space-y-2">
+
+                  <TableCell className="align-top pt-3.5">
                     <StatusSelect job={job} />
-                    <div className="flex flex-wrap gap-1.5">
-                      <JobNotesModal jobId={job.id} initialNotes={job.notes} />
-                      <ArchiveButton jobId={job.id} isArchiveView={isArchiveView} />
-                    </div>
                   </TableCell>
+
                   <TableCell className="align-top pt-4">
                     <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
                       {formatDate(job.createdAt)}
                     </p>
                   </TableCell>
-                  <TableCell className="pr-6 align-top pt-4">
+
+                  <TableCell className="align-top pt-4">
                     <FileLinks files={job.files} />
+                  </TableCell>
+
+                  {/* Compact actions column — icon only with tooltips */}
+                  <TableCell className="pr-6 align-top pt-3.5">
+                    <div className="flex items-center justify-center gap-1.5">
+                      <JobNotesModal jobId={job.id} initialNotes={job.notes} iconOnly />
+                      <ArchiveIconButton jobId={job.id} isArchiveView={isArchiveView} />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -372,13 +427,23 @@ export function AdminDashboardClient({ jobs, isArchiveView = false }: Props) {
                       </span>
                     )}
                   </div>
-                  <p className="text-zinc-500 font-mono text-xs mt-0.5">{job.customer.contact}</p>
+                  {/* Mobile copy rows */}
+                  <div className="group/customer flex items-center mt-0.5">
+                    <p className="text-zinc-500 font-mono text-xs">{job.customer.contact}</p>
+                    <CopyButton value={job.customer.contact} label="phone number" />
+                  </div>
+                  {job.customer.email && (
+                    <div className="group/customer flex items-center mt-0.5">
+                      <p className="text-zinc-400 text-xs truncate max-w-[160px]">{job.customer.email}</p>
+                      <CopyButton value={job.customer.email} label="email" />
+                    </div>
+                  )}
                 </div>
                 <div className="flex flex-col items-end gap-2">
                   <StatusSelect job={job} />
                   <div className="flex gap-1.5">
-                    <JobNotesModal jobId={job.id} initialNotes={job.notes} />
-                    <ArchiveButton jobId={job.id} isArchiveView={isArchiveView} />
+                    <JobNotesModal jobId={job.id} initialNotes={job.notes} iconOnly />
+                    <ArchiveIconButton jobId={job.id} isArchiveView={isArchiveView} />
                   </div>
                 </div>
               </div>

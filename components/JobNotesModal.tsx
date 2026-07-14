@@ -24,9 +24,11 @@ type Note = {
 export function JobNotesModal({
   jobId,
   initialNotes,
+  iconOnly = false,
 }: {
   jobId: string;
   initialNotes: Note[];
+  iconOnly?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [notes, setNotes] = useState<Note[]>(initialNotes);
@@ -56,10 +58,14 @@ export function JobNotesModal({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
-        className="relative inline-flex items-center gap-1.5 h-8 px-3 text-xs font-medium rounded-md border border-zinc-200 dark:border-zinc-800 bg-white hover:bg-zinc-100 dark:bg-zinc-950 dark:hover:bg-zinc-900 text-zinc-700 dark:text-zinc-300 transition-colors"
+        title="View notes"
+        className={iconOnly
+          ? "relative inline-flex items-center justify-center w-8 h-8 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white hover:bg-zinc-100 dark:bg-zinc-950 dark:hover:bg-zinc-900 text-zinc-500 dark:text-zinc-400 transition-colors"
+          : "relative inline-flex items-center gap-1.5 h-8 px-3 text-xs font-medium rounded-md border border-zinc-200 dark:border-zinc-800 bg-white hover:bg-zinc-100 dark:bg-zinc-950 dark:hover:bg-zinc-900 text-zinc-700 dark:text-zinc-300 transition-colors"
+        }
       >
         <MessageSquarePlusIcon className="w-3.5 h-3.5" />
-        Notes
+        {!iconOnly && "Notes"}
         {notes.length > 0 && (
           <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-blue-500 text-[9px] font-bold text-white flex items-center justify-center">
             {notes.length}
