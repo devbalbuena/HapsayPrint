@@ -58,11 +58,11 @@ export type SubmitPrintJobData = {
   contact: string;
   email: string | null;
   description: string;
-  file?: {
+  files?: {
     url: string;
     originalName: string;
     fileType: string;
-  };
+  }[];
   paperSize?: string | null;
   quantity?: number;
   printType?: string | null;
@@ -108,15 +108,15 @@ export async function submitPrintJob(data: SubmitPrintJobData) {
         },
       });
 
-      // 3. Create FileUpload if a file is present
-      if (data.file) {
-        await tx.fileUpload.create({
-          data: {
-            url: data.file.url,
-            originalName: data.file.originalName,
-            fileType: data.file.fileType,
+      // 3. Create FileUpload records if files are present
+      if (data.files && data.files.length > 0) {
+        await tx.fileUpload.createMany({
+          data: data.files.map(f => ({
+            url: f.url,
+            originalName: f.originalName,
+            fileType: f.fileType,
             jobId: newJob.id,
-          },
+          })),
         });
       }
 

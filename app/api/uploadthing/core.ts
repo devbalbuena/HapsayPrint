@@ -5,8 +5,8 @@ const f = createUploadthing();
 export const ourFileRouter = {
   // Define a generic file route
   printJobFile: f({
-    image: { maxFileSize: "16MB", maxFileCount: 1 },
-    pdf: { maxFileSize: "16MB", maxFileCount: 1 },
+    image: { maxFileSize: "16MB", maxFileCount: 5 },
+    pdf: { maxFileSize: "16MB", maxFileCount: 5 },
   })
     // Set permissions and file types for this FileRoute
     .onUploadComplete(async ({ metadata, file }) => {

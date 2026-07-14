@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { SubmitSuccess } from "./SubmitSuccess";
-import { UploadCloudIcon, FileIcon, Loader2Icon, ArrowRightIcon, CheckCircleIcon, CalculatorIcon } from "lucide-react";
+import { UploadCloudIcon, FileIcon, Loader2Icon, ArrowRightIcon, CheckCircleIcon, CalculatorIcon, XIcon } from "lucide-react";
 import { uploadFiles } from "@/lib/uploadthing";
 import { submitPrintJob } from "@/app/actions";
 import { toast } from "sonner";
@@ -20,7 +20,7 @@ interface FormData {
   contact: string;
   email: string;
   description: string;
-  file: File | null;
+  files: File[];
   paperSize: string | null;
   quantity: number;
   printType: string | null;
@@ -42,7 +42,7 @@ export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) 
     contact: "",
     email: "",
     description: "",
-    file: null,
+    files: [],
     paperSize: null,
     quantity: 1,
     printType: null,
@@ -52,7 +52,6 @@ export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) 
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [fileName, setFileName] = useState<string | null>(null);
 
   const [trackingCode, setTrackingCode] = useState<string | null>(null);
 
@@ -81,9 +80,24 @@ export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) 
   }
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0] ?? null;
-    setForm((prev) => ({ ...prev, file }));
-    setFileName(file?.name ?? null);
+    const newFiles = Array.from(e.target.files ?? []);
+    setForm((prev) => {
+      const combined = [...prev.files, ...newFiles];
+      if (combined.length > 5) {
+        toast.error("You can only upload up to 5 files per job.");
+        return { ...prev, files: combined.slice(0, 5) };
+      }
+      return { ...prev, files: combined };
+    });
+    // Reset input so you can select the same file again if needed
+    e.target.value = "";
+  }
+
+  function removeFile(index: number) {
+    setForm((prev) => ({
+      ...prev,
+      files: prev.files.filter((_, i) => i !== index),
+    }));
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -96,20 +110,20 @@ export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) 
     setLoading(true);
 
     try {
-      let fileData = undefined;
+      let filesData: { url: string; originalName: string; fileType: string }[] = [];
       
-      if (form.file) {
-        toast.loading("Uploading file...", { id: "submit-toast" });
+      if (form.files.length > 0) {
+        toast.loading(`Uploading ${form.files.length} file(s)...`, { id: "submit-toast" });
         const res = await uploadFiles("printJobFile", {
-          files: [form.file],
+          files: form.files,
         });
         
         if (res && res.length > 0) {
-          fileData = {
-            url: res[0].ufsUrl || res[0].url,
-            originalName: res[0].name,
-            fileType: res[0].type,
-          };
+          filesData = res.map((r) => ({
+            url: r.ufsUrl || r.url,
+            originalName: r.name,
+            fileType: r.type,
+          }));
         }
       } else {
         toast.loading("Submitting your order...", { id: "submit-toast" });
@@ -120,7 +134,7 @@ export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) 
         contact: form.contact,
         email: form.email || null,
         description: form.description,
-        file: fileData,
+        files: filesData,
         paperSize: form.paperSize,
         quantity: form.quantity,
         printType: form.printType,
@@ -150,8 +164,7 @@ export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) 
         name={form.name} 
         trackingCode={trackingCode || undefined}
         onReset={() => {
-          setForm({ name: "", contact: "", email: "", description: "", file: null, paperSize: null, quantity: 1, printType: null, finishing: "NONE", isRush: false });
-          setFileName(null);
+          setForm({ name: "", contact: "", email: "", description: "", files: [], paperSize: null, quantity: 1, printType: null, finishing: "NONE", isRush: false });
           setErrors({});
           setSubmitted(false);
           setTrackingCode(null);
@@ -338,57 +351,74 @@ export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) 
         </div>
 
         {/* File Upload Zone */}
-        <div className="space-y-2 pt-2">
+        <div className="space-y-3 pt-2">
           <Label htmlFor="file" className="text-zinc-700 dark:text-zinc-300 font-medium flex justify-between">
-            <span>Attach File</span>
-            <span className="text-zinc-400 font-normal">Max 20MB</span>
+            <span>Attach Files</span>
+            <span className="text-zinc-400 font-normal">Max 5 files (20MB each)</span>
           </Label>
-          <label
-            htmlFor="file"
-            className={cn(
-              "relative flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 overflow-hidden group",
-              fileName 
-                ? "border-emerald-500/50 bg-emerald-50/30 dark:bg-emerald-950/20" 
-                : "border-zinc-300 dark:border-zinc-700 bg-zinc-50/50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-500"
-            )}
-          >
-            <div className="flex flex-col items-center justify-center gap-3 z-10 p-4 text-center">
-              {fileName ? (
-                <>
-                  <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-1 shadow-sm">
-                    <FileIcon className="w-5 h-5" />
+          
+          {/* List of selected files */}
+          {form.files.length > 0 && (
+            <div className="flex flex-col gap-2">
+              {form.files.map((file, index) => (
+                <div key={`${file.name}-${index}`} className="flex items-center justify-between p-3 bg-emerald-50/30 dark:bg-emerald-950/20 border border-emerald-500/30 rounded-xl">
+                  <div className="flex items-center gap-3 overflow-hidden">
+                    <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 shadow-sm">
+                      <FileIcon className="w-4 h-4" />
+                    </div>
+                    <div className="truncate">
+                      <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-400 truncate">
+                        {file.name}
+                      </p>
+                      <p className="text-xs text-emerald-600/70 dark:text-emerald-500/70">
+                        {(file.size / (1024 * 1024)).toFixed(2)} MB
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-400 truncate max-w-[250px]">
-                    {fileName}
-                  </p>
-                  <p className="text-xs text-emerald-600/70 dark:text-emerald-500/70">Click to change file</p>
-                </>
-              ) : (
-                <>
-                  <div className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform duration-200 shadow-sm">
-                    <UploadCloudIcon className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                      Click to upload a document
-                    </p>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
-                      PDF, DOCX, JPG, or PNG
-                    </p>
-                  </div>
-                </>
-              )}
+                  <button
+                    type="button"
+                    onClick={() => removeFile(index)}
+                    className="p-1.5 text-zinc-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg transition-colors"
+                    title="Remove file"
+                  >
+                    <XIcon className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
             </div>
-            
-            <input
-              id="file"
-              name="file"
-              type="file"
-              accept="image/*,.pdf,.doc,.docx"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-          </label>
+          )}
+
+          {/* Upload Button */}
+          {form.files.length < 5 && (
+            <label
+              htmlFor="file"
+              className={cn(
+                "relative flex flex-col items-center justify-center w-full h-24 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 overflow-hidden group",
+                "border-zinc-300 dark:border-zinc-700 bg-zinc-50/50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-500"
+              )}
+            >
+              <div className="flex flex-col items-center justify-center gap-2 z-10 p-4 text-center">
+                <div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 flex items-center justify-center group-hover:scale-110 transition-transform duration-200 shadow-sm">
+                  <UploadCloudIcon className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    Click to add a document
+                  </p>
+                </div>
+              </div>
+              
+              <input
+                id="file"
+                name="file"
+                type="file"
+                multiple
+                accept="image/*,.pdf,.doc,.docx"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+            </label>
+          )}
         </div>
 
         {/* Rush Order Toggle */}
