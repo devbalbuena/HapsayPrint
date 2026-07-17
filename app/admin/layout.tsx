@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { SignOutButton } from "@/components/SignOutButton";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { PrinterIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -45,6 +46,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               Public Form ↗
             </Link>
             <div className="h-4 w-px bg-zinc-800 hidden sm:block" />
+            <ThemeToggle />
             <SignOutButton />
           </div>
         </div>
