@@ -52,6 +52,7 @@ export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) 
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   const [trackingCode, setTrackingCode] = useState<string | null>(null);
 
@@ -79,8 +80,7 @@ export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) 
     }
   }
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const newFiles = Array.from(e.target.files ?? []);
+  function processFiles(newFiles: File[]) {
     setForm((prev) => {
       const combined = [...prev.files, ...newFiles];
       if (combined.length > 5) {
@@ -89,8 +89,32 @@ export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) 
       }
       return { ...prev, files: combined };
     });
+  }
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files) {
+      processFiles(Array.from(e.target.files));
+    }
     // Reset input so you can select the same file again if needed
     e.target.value = "";
+  }
+
+  function handleDragOver(e: React.DragEvent) {
+    e.preventDefault();
+    setIsDragging(true);
+  }
+
+  function handleDragLeave(e: React.DragEvent) {
+    e.preventDefault();
+    setIsDragging(false);
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      processFiles(Array.from(e.dataTransfer.files));
+    }
   }
 
   function removeFile(index: number) {
@@ -388,22 +412,38 @@ export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) 
             </div>
           )}
 
-          {/* Upload Button */}
+          {/* Upload Button / Dropzone */}
           {form.files.length < 5 && (
             <label
               htmlFor="file"
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
               className={cn(
-                "relative flex flex-col items-center justify-center w-full h-24 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 overflow-hidden group",
-                "border-zinc-300 dark:border-zinc-700 bg-zinc-50/50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-500"
+                "relative flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 overflow-hidden group",
+                isDragging
+                  ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30 scale-[1.02]"
+                  : "border-zinc-300 dark:border-zinc-700 bg-zinc-50/50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-500"
               )}
             >
-              <div className="flex flex-col items-center justify-center gap-2 z-10 p-4 text-center">
-                <div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 flex items-center justify-center group-hover:scale-110 transition-transform duration-200 shadow-sm">
-                  <UploadCloudIcon className="w-4 h-4" />
+              <div className="flex flex-col items-center justify-center gap-2 z-10 p-4 text-center pointer-events-none">
+                <div className={cn(
+                  "w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 shadow-sm",
+                  isDragging 
+                    ? "bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 scale-110" 
+                    : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 group-hover:scale-110"
+                )}>
+                  <UploadCloudIcon className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                    Click to add a document
+                  <p className={cn(
+                    "text-sm font-semibold",
+                    isDragging ? "text-emerald-700 dark:text-emerald-400" : "text-zinc-700 dark:text-zinc-300"
+                  )}>
+                    {isDragging ? "Drop files here!" : "Click or drag files here"}
+                  </p>
+                  <p className="text-xs text-zinc-500 mt-1">
+                    PDF, DOC, DOCX, or Images
                   </p>
                 </div>
               </div>
