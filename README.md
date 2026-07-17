@@ -21,10 +21,11 @@ HapsayPrint is a full-stack print job management system built for small print sh
 
 ### 🖨️ Customer-Facing (Public)
 
-- **Job Submission Form** — Customers submit print jobs with their name, contact number, email (optional), and a job description — no account required.
-- **File Upload** — Optional file attachment per job, uploaded via UploadThing and stored securely.
-- **Print Specifications** — Customers can select paper size (Short, Long, A4, Legal), print type (B&W or Colored), quantity, and finishing (None, Lamination, Comb Binding, Spiral Binding).
-- **Live Price Estimate (Dynamic)** — A price calculator updates in real time as the customer selects specs, displaying an estimated cost based on live pricing settings configured by the admin.
+- **Job Submission Form** — Customers submit print orders with their name, contact number, email (optional), and instructions — no account required.
+- **Multiple File Uploads** — Customers can attach up to 5 files per job (e.g., multiple PDFs), uploaded securely via UploadThing.
+- **Print Specifications** — Selection of paper size (Short, Long, A4, Legal), print type (B&W or Colored), quantity, and finishing (None, Lamination, Comb Binding, Spiral Binding).
+- **Rush Order Option** — Customers can mark their job as a "Rush Order" for an additional fee, which flags the job with a red badge in the admin dashboard.
+- **Live Price Estimate (Dynamic)** — A price calculator updates in real time as the customer selects specs and rush options, displaying an estimated cost based on live pricing settings configured by the admin.
 - **Shop Business Hours / Vacation Mode** — If the store is manually set to "Closed" or is outside automatic operating hours, the public form is hidden and replaced by a customizable "We're Closed" message with schedule details.
 - **Tracking Code** — Each job submission generates a unique `HP-XXXXXX` tracking code shown to the customer on success.
 - **Order Tracking Page** — Customers can visit `/track/[code]` to view the current status of their job (Pending, In Progress, Ready for Pickup, Delivered) along with order details and attached file info.
@@ -33,15 +34,17 @@ HapsayPrint is a full-stack print job management system built for small print sh
 
 - **Secure Login** — Staff log in via email and bcrypt-hashed password using NextAuth v5 with JWT sessions.
 - **Admin Dashboard** — A full-width table listing all active jobs, showing customer name, contact, description, print specs, status, submission date, and attached files.
-- **Status Updates** — Inline status dropdown per job with optimistic UI updates. Changing status updates the database and revalidates the page without a full refresh.
-- **Email Notifications** — When a job is marked **Ready for Pickup** and the customer has an email on file, a transactional email is automatically sent via Resend. If sending fails, the status update still succeeds.
+- **Quick Copy Details** — Staff can hover over a customer's phone number or email in the dashboard to reveal a 1-click "copy to clipboard" button.
+- **Status Updates** — Inline status dropdown per job with optimistic UI updates. Changing status updates the database and revalidates the page instantly.
+- **Email Notifications** — When a job is marked **Ready for Pickup** and the customer has an email on file, a transactional email is automatically sent via Resend.
 - **Internal Notes** — Admins can open a notes dialog per job to leave and read internal staff comments (e.g. "Customer confirmed matte finish"). Notes show the author's name and a relative timestamp (e.g. "2 hours ago"). Notes are never exposed to customers.
 - **Job Archiving** — Jobs can be archived at any time to remove them from the active dashboard. An optimistic UI ensures it feels instant.
 - **Job Filtering & Search** — The dashboard supports filtering jobs by status and searching by customer name, description, or contact number.
 - **System Settings** (`/admin/settings`):
-  - **Dynamic Pricing:** Admins can adjust base prices (by paper size and print type) and finishing add-ons in real-time. Changes only apply to future jobs.
+  - **Dynamic Pricing:** Admins can adjust base prices, finishing add-ons, and the rush fee in real-time. Changes only apply to future jobs.
   - **Store Status:** A toggle to manually accept or pause orders, plus settings for an automatic schedule (open/close hours and operating days) and a custom closed message.
 - **QR Code Generator** (`/admin/qr`) — Generates a scannable QR code pointing to the public submission form. Admins can download it as a PNG or print it directly to place at the shop counter.
+- **Smooth Page Transitions** — The entire admin portal features a smooth "fade-in up" animation on every page load for a premium feel.
 - **Sign Out** — Session-aware sign out button in the top navigation.
 
 ### 📊 Analytics Dashboard
@@ -49,6 +52,7 @@ HapsayPrint is a full-stack print job management system built for small print sh
 - **Today's Job Count** — Total jobs submitted today.
 - **Weekly Job Count** — Total jobs submitted in the last 7 days.
 - **Estimated Weekly Revenue** — Sum of all `estimatedPrice` values from jobs in the last 7 days.
+- **Vibrant UI Design** — Top metrics are displayed using premium, solid gradient cards to make critical data stand out.
 - **Status Breakdown** — Cards showing the live count of jobs in each status (Pending, In Progress, Ready for Pickup, Delivered).
 - **7-Day Volume Bar Chart** — A Recharts bar chart showing daily job volume for the past 7 days, with the busiest day highlighted.
 - **Most Requested Specs** — Shows the most common print type and finishing option across all jobs, useful for inventory and staffing decisions.
@@ -151,6 +155,7 @@ The core record for a single print order.
 | `quantity`      | Int?      | Number of pages/copies                         |
 | `printType`     | String?   | BW or COLORED                                  |
 | `finishing`     | String?   | NONE, LAMINATION, BINDING_COMB, BINDING_SPIRAL |
+| `isRush`        | Boolean   | True if the customer selected Rush Order       |
 | `estimatedPrice`| Float?    | Calculated at submission time (₱)              |
 | `archived`      | Boolean   | True if archived by admin                      |
 | `createdAt`     | DateTime  | Submission timestamp                           |
