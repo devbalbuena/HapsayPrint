@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo, useTransition } from "react";
+import { useState, useMemo, useTransition, useEffect } from "react";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -252,9 +253,13 @@ function ArchiveIconButton({ jobId, isArchiveView }: { jobId: string; isArchiveV
   );
 }
 
+const PAGE_SIZE_OPTIONS = [10, 20, 50];
+
 export function AdminDashboardClient({ jobs, isArchiveView = false }: Props) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
@@ -268,6 +273,14 @@ export function AdminDashboardClient({ jobs, isArchiveView = false }: Props) {
       return matchesStatus && matchesSearch;
     });
   }, [jobs, search, statusFilter]);
+
+  // Reset to page 1 when filter/search/pageSize changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, statusFilter, pageSize]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const paginated = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   return (
     <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950/50 shadow-sm overflow-hidden">
@@ -341,7 +354,7 @@ export function AdminDashboardClient({ jobs, isArchiveView = false }: Props) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filtered.map((job) => (
+              {paginated.map((job) => (
                 <TableRow
                   key={job.id}
                   className="hover:bg-zinc-50/50 dark:hover:bg-zinc-900/50 transition-colors border-zinc-100 dark:border-zinc-800/50 group"
@@ -412,10 +425,79 @@ export function AdminDashboardClient({ jobs, isArchiveView = false }: Props) {
         </div>
       )}
 
+      {/* Pagination Footer */}
+      {filtered.length > 0 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-3.5 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/20">
+          {/* Left: result info + page size */}
+          <div className="flex items-center gap-3">
+            <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              Showing <span className="font-semibold text-zinc-900 dark:text-zinc-100">{filtered.length === 0 ? 0 : (currentPage - 1) * pageSize + 1}</span>–<span className="font-semibold text-zinc-900 dark:text-zinc-100">{Math.min(currentPage * pageSize, filtered.length)}</span> of <span className="font-semibold text-zinc-900 dark:text-zinc-100">{filtered.length}</span> jobs
+            </p>
+            <select
+              value={pageSize}
+              onChange={(e) => setPageSize(Number(e.target.value))}
+              className="h-7 px-2 pr-6 text-xs font-medium rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 focus:outline-none focus:ring-1 focus:ring-zinc-400 appearance-none cursor-pointer"
+              style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 6px center" }}
+            >
+              {PAGE_SIZE_OPTIONS.map((n) => (
+                <option key={n} value={n}>{n} per page</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Right: page controls */}
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronLeftIcon className="w-4 h-4" />
+            </button>
+
+            {/* Page number pills */}
+            {Array.from({ length: totalPages }, (_, i) => i + 1)
+              .filter((p) => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
+              .reduce<(number | "...")[]>((acc, p, idx, arr) => {
+                if (idx > 0 && p - (arr[idx - 1] as number) > 1) acc.push("...");
+                acc.push(p);
+                return acc;
+              }, [])
+              .map((item, idx) =>
+                item === "..." ? (
+                  <span key={`ellipsis-${idx}`} className="px-1 text-xs text-zinc-400">…</span>
+                ) : (
+                  <button
+                    key={item}
+                    onClick={() => setCurrentPage(item as number)}
+                    className={cn(
+                      "inline-flex items-center justify-center w-8 h-8 rounded-lg border text-xs font-semibold transition-colors",
+                      currentPage === item
+                        ? "bg-zinc-900 text-white border-zinc-900 dark:bg-zinc-100 dark:text-zinc-900 dark:border-zinc-100"
+                        : "border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                    )}
+                  >
+                    {item}
+                  </button>
+                )
+              )
+            }
+
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronRightIcon className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Mobile Cards View */}
       {filtered.length > 0 && (
         <div className="flex flex-col md:hidden divide-y divide-zinc-200 dark:divide-zinc-800">
-          {filtered.map((job) => (
+          {paginated.map((job) => (
             <div key={job.id} className="p-5 space-y-4 bg-white dark:bg-transparent">
               <div className="flex items-start justify-between gap-3">
                 <div>
