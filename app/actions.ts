@@ -53,6 +53,59 @@ export async function updateJobStatus(jobId: string, newStatus: string) {
   }
 }
 
+export type LastOrderPrefill = {
+  name: string;
+  email: string | null;
+  paperSize: string | null;
+  printType: string | null;
+  finishing: string | null;
+  quantity: number;
+  isRush: boolean;
+};
+
+/** Public: load print specs from the customer's most recent job (matched by contact). */
+export async function getLastOrderByContact(
+  contact: string
+): Promise<{ success: true; data: LastOrderPrefill | null } | { success: false; error: string }> {
+  const trimmed = contact.trim();
+  if (trimmed.length < 7) {
+    return { success: true, data: null };
+  }
+
+  try {
+    const customer = await prisma.customer.findFirst({
+      where: { contact: trimmed },
+      include: {
+        jobs: {
+          orderBy: { createdAt: "desc" },
+          take: 1,
+        },
+      },
+    });
+
+    if (!customer || customer.jobs.length === 0) {
+      return { success: true, data: null };
+    }
+
+    const job = customer.jobs[0];
+    return {
+      success: true,
+      data: {
+        name: customer.name,
+        email: customer.email,
+        paperSize: job.paperSize,
+        printType: job.printType,
+        finishing: job.finishing ?? "NONE",
+        quantity: job.quantity && job.quantity > 0 ? job.quantity : 1,
+        isRush: job.isRush,
+      },
+    };
+  } catch (error) {
+    console.error("Failed to load last order:", error);
+    return { success: false, error: "Could not load your previous order." };
+  }
+}
+
 export type SubmitPrintJobData = {
   name: string;
   contact: string;
@@ -73,10 +126,11 @@ export type SubmitPrintJobData = {
 
 export async function submitPrintJob(data: SubmitPrintJobData) {
   try {
+    const contact = data.contact.trim();
     const job = await prisma.$transaction(async (tx) => {
       // 1. Find existing customer by contact number or create a new one
       let customer = await tx.customer.findFirst({
-        where: { contact: data.contact },
+        where: { contact },
       });
 
       if (customer) {
@@ -87,7 +141,7 @@ export async function submitPrintJob(data: SubmitPrintJobData) {
         });
       } else {
         customer = await tx.customer.create({
-          data: { name: data.name, contact: data.contact, email: data.email },
+          data: { name: data.name, contact, email: data.email },
         });
       }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { SubmitSuccess } from "./SubmitSuccess";
 import { UploadCloudIcon, FileIcon, Loader2Icon, ArrowRightIcon, CheckCircleIcon, CalculatorIcon, XIcon } from "lucide-react";
 import { uploadFiles } from "@/lib/uploadthing";
-import { submitPrintJob } from "@/app/actions";
+import { submitPrintJob, getLastOrderByContact } from "@/app/actions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -55,6 +55,70 @@ export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) 
   const [isDragging, setIsDragging] = useState(false);
 
   const [trackingCode, setTrackingCode] = useState<string | null>(null);
+  const [prefillBanner, setPrefillBanner] = useState(false);
+  const [prefillLoading, setPrefillLoading] = useState(false);
+  const lastPrefillContactRef = useRef<string | null>(null);
+
+  const applyLastOrderPrefill = useCallback(async (contact: string) => {
+    const trimmed = contact.trim();
+    if (trimmed.length < 7) {
+      setPrefillBanner(false);
+      return;
+    }
+    if (lastPrefillContactRef.current === trimmed) return;
+
+    setPrefillLoading(true);
+    try {
+      const result = await getLastOrderByContact(trimmed);
+      if (!result.success) {
+        toast.error(result.error);
+        return;
+      }
+      if (!result.data) {
+        lastPrefillContactRef.current = trimmed;
+        setPrefillBanner(false);
+        return;
+      }
+
+      const { data } = result;
+      lastPrefillContactRef.current = trimmed;
+
+      setForm((prev) => ({
+        ...prev,
+        name: prev.name.trim() ? prev.name : data.name,
+        email: prev.email.trim() ? prev.email : data.email ?? "",
+        paperSize: data.paperSize ?? prev.paperSize,
+        printType: data.printType ?? prev.printType,
+        finishing: data.finishing ?? prev.finishing ?? "NONE",
+        quantity: data.quantity,
+        isRush: data.isRush,
+      }));
+      setErrors((prev) => ({
+        ...prev,
+        paperSize: undefined,
+        printType: undefined,
+      }));
+      setPrefillBanner(true);
+      toast.success("Loaded print options from your last order");
+    } finally {
+      setPrefillLoading(false);
+    }
+  }, []);
+
+  function handleContactBlur() {
+    void applyLastOrderPrefill(form.contact);
+  }
+
+  function handleContactChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
+    handleChange(e);
+    const value = e.target.value;
+    if (lastPrefillContactRef.current && value.trim() !== lastPrefillContactRef.current) {
+      lastPrefillContactRef.current = null;
+      setPrefillBanner(false);
+    }
+  }
 
   const estimatedPrice = useMemo(() => {
     return calculateEstimate(pricingConfig, form.paperSize, form.printType, form.finishing, form.quantity, form.isRush);
@@ -192,6 +256,8 @@ export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) 
           setErrors({});
           setSubmitted(false);
           setTrackingCode(null);
+          setPrefillBanner(false);
+          lastPrefillContactRef.current = null;
         }} 
       />
     );
@@ -236,12 +302,22 @@ export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) 
               type="tel"
               placeholder="e.g. 0917 123 4567"
               value={form.contact}
-              onChange={handleChange}
+              onChange={handleContactChange}
+              onBlur={handleContactBlur}
               className={cn(
                 "h-11 bg-zinc-50/50 dark:bg-zinc-950/50 focus-visible:ring-zinc-950 dark:focus-visible:ring-zinc-300 transition-all border-zinc-200 dark:border-zinc-800",
                 errors.contact && "border-rose-500 focus-visible:ring-rose-500 bg-rose-50/50 dark:bg-rose-950/20"
               )}
             />
+            <p className="text-xs text-zinc-500">
+              Returning customer? Tab out after your number — we&apos;ll fill in your last print settings.
+            </p>
+            {prefillLoading && (
+              <p className="text-xs text-zinc-500 flex items-center gap-1.5">
+                <Loader2Icon className="w-3 h-3 animate-spin" />
+                Looking up your last order…
+              </p>
+            )}
             {errors.contact && <p className="text-xs text-rose-500 font-medium">{errors.contact}</p>}
           </div>
         </div>
@@ -282,6 +358,15 @@ export function SubmitForm({ pricingConfig }: { pricingConfig: PricingConfig }) 
           />
           {errors.description && <p className="text-xs text-rose-500 font-medium">{errors.description}</p>}
         </div>
+
+        {prefillBanner && (
+          <div className="flex items-start gap-3 p-4 rounded-xl border border-blue-200 bg-blue-50/80 dark:bg-blue-950/20 dark:border-blue-900/50 text-sm text-blue-900 dark:text-blue-100">
+            <CheckCircleIcon className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+            <p>
+              Print options match your previous order. Update anything that&apos;s different for this job, then add new files and instructions.
+            </p>
+          </div>
+        )}
 
         {/* Print Specifications Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-5 bg-zinc-50/50 dark:bg-zinc-900/30 rounded-xl border border-zinc-200/60 dark:border-zinc-800">
